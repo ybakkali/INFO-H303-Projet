@@ -1,0 +1,107 @@
+<mechanics>
+   <mechanic>
+      <mechanicID>13532429951152526852</mechanicID>
+      <lastname>LAMY</lastname>
+      <firstname>Maude</firstname>
+      <password>3722</password>
+      <phone>0499124509</phone>
+      <address>
+         <city>Etterbeek</city>
+         <cp>1040</cp>
+         <street>rue De Theux</street>
+         <number>9</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506975410438600</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>45341287488435633628</mechanicID>
+      <lastname>BELLENGER</lastname>
+      <firstname>Fadela</firstname>
+      <password>2950</password>
+      <phone>0498533189</phone>
+      <address>
+         <city>Bruxelles</city>
+         <cp>1000</cp>
+         <street>avenue de la Brabanconne</street>
+         <number>4</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506668367557340</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>78849393673150838933</mechanicID>
+      <lastname>SAMSON</lastname>
+      <firstname>Sondes</firstname>
+      <password>5144</password>
+      <phone>0483294920</phone>
+      <address>
+         <city>Bruxelles</city>
+         <cp>1000</cp>
+         <street>val de la Futaie</street>
+         <number>29</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506483400028654</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>02492387079526083017</mechanicID>
+      <lastname>LEBOURG</lastname>
+      <firstname>Denovan</firstname>
+      <password>0327</password>
+      <phone>0498410261</phone>
+      <address>
+         <city>Ixelles</city>
+         <cp>1050</cp>
+         <street>rue de Belle-Vue</street>
+         <number>62</number>
+      </address>
+      <hireDate>2018-01-01</hireDate>
+      <bankaccount>4506195454161153</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>64558523381191040456</mechanicID>
+      <lastname>MABIRE</lastname>
+      <firstname>Maude</firstname>
+      <password>6807</password>
+      <phone>0479208435</phone>
+      <address>
+         <city>Saint-Gilles</city>
+         <cp>1060</cp>
+         <street>rue Simonis</street>
+         <number>150</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506364512537869</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>64153067310861774161</mechanicID>
+      <lastname>AUBERT</lastname>
+      <firstname>Adelaide</firstname>
+      <password>3476</password>
+      <phone>0474331462</phone>
+      <address>
+         <city>Saint-Gilles</city>
+         <cp>1060</cp>
+         <street>place Loix</street>
+         <number>95</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506946887870928</bankaccount>
+   </mechanic>
+   <mechanic>
+      <mechanicID>13606396145103915048</mechanicID>
+      <lastname>BOUTIGNY</lastname>
+      <firstname>Marie-bernadette</firstname>
+      <password>5912</password>
+      <phone>0472733736</phone>
+      <address>
+         <city>Saint-Gilles</city>
+         <cp>1060</cp>
+         <street>rue de Serbie</street>
+         <number>49</number>
+      </address>
+      <hireDate>2017-01-01</hireDate>
+      <bankaccount>4506818225201438</bankaccount>
+   </mechanic>
+</mechanics>
