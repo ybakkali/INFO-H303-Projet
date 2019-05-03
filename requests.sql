@@ -52,7 +52,7 @@ SET `availability` = 1;
 /*R1*/
 SELECT s.`scooterID`, s.`locationX`, s.`locationY`
 FROM `SCOOTERS` s
-WHERE s.`availability` = 1
+WHERE s.`availability` = 1;
 
 
 /*R2 (Si c'est: -> La liste des utilisateurs ayant utilisé toutes les trottinettes qu'ils ont rechargées.)*/
