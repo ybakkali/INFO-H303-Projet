@@ -51,11 +51,11 @@ SET `availability` = 1;
 
 /*R1*/
 SELECT s.`scooterID`, s.`locationX`, s.`locationY`
-FROM `SCOOTERS` s;
+FROM `SCOOTERS` s
+WHERE s.`availability` = 1
 
 
 /*R2 (Si c'est: -> La liste des utilisateurs ayant utilisé toutes les trottinettes qu'ils ont rechargées.)*/
-
 SELECT DISTINCT rl.`userID`
 FROM `RELOADS` rl, `TRIPS` tr
 WHERE rl.`userID` = tr.`userID`
@@ -81,3 +81,6 @@ WHERE(
       WHERE r.`scooterID` = rep.`scooterID`
       GROUP BY r.`scooterID`
     ) >= 10;
+
+
+/*R5
