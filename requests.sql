@@ -44,3 +44,6 @@ SET `locationY` =( SELECT `destinationY`
                                ORDER BY `scooterID`
                              )
                   );
+
+UPDATE `SCOOTERS`
+SET `availability` = 1;

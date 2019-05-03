@@ -93,8 +93,11 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
 ( `scooterID` int unsigned NOT NULL,
   `commissioningDate` DATETIME NOT NULL,
   `modelNumber` varchar(30) NOT NULL,
-  `complainState` varchar(5) NOT NULL,
+  `complainState` boolean NOT NULL,
   `batteryLevel` int NOT NULL,
+  `locationX` float  NOT NULL,
+  `locationY` float  NOT NULL,
+  `availability` boolean NOT NULL,
   PRIMARY KEY(`scooterID`)
 ) engine = innodb;
 
@@ -116,6 +119,8 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
 
+  INDEX(scooterID, endtime,destinationX),
+  INDEX(userID),
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter FOREIGN KEY(scooterID)
       REFERENCES SCOOTERS(scooterID),
