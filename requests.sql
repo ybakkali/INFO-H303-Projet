@@ -63,15 +63,37 @@ ORDER BY rl.`userID`;
 
 
 /*R3*/
-SELECT tr.`scooterID`
-FROM `TRIPS` tr
-WHERE ((power(power(tr.`destinationY`-tr.`sourceY`,2)+power(tr.`destinationX`-tr.`sourceX`,2),0.5)) =
-       ( SELECT max(power(power(t.`destinationY`-t.`sourceY`,2)+power(t.`destinationX`-t.`sourceX`,2),0.5))
-         FROM `TRIPS` t
-       ));
+SELECT T.`scooterID`
+FROM `TRIPS` T
+GROUP BY T.`scooterID`
+HAVING sum(ST_Distance_Sphere(point(T.`sourceX`, T.`sourceY`),
+                  point(T.`destinationX`, T.`destinationY`))) = ( SELECT max(`Distance`)
+                                                                  FROM ( SELECT S.`scooterID`, sum(ST_Distance_Sphere(point(S.`sourceX`, S.`sourceY`),
+                                                                                                          point(S.`destinationX`, S.`destinationY`))) as `Distance`
+                                                                         FROM `TRIPS` S
+                                                                         GROUP BY S.`scooterID`
+                                                                        ) SUM_SCOOTER_DISTANCE
+                                                                  );
 
+/*
+CREATE TABLE IF NOT EXISTS `TEST`
+( `ID` int unsigned NOT NULL,
+  `Distance` int unsigned NOT NULL
+)
 
+INSERT INTO TEST
+VALUES (1,10),(1,15),(2,20),(3,5),(4,10),(2,10),(3,15),(1,20),(4,5),(8,10);
 
+SELECT T.ID
+FROM TEST T
+GROUP BY T.ID
+HAVING sum(T.distance) = (SELECT min(`D`)
+                          FROM ( SELECT t.ID, sum(t.distance) as `D`
+                                 FROM TEST t
+                                 GROUP BY t.ID
+                                ) K
+                       );
+*/
 /*R4*/
 SELECT DISTINCT rep.`scooterID`
 FROM `REPARATIONS` rep
