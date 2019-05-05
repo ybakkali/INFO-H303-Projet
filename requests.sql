@@ -1,79 +1,40 @@
-use scooterDB;
-
-/*
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM TRIPS
-WHERE scooterID = 0;
-
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM `TRIPS` T
-WHERE `endtime` = ( SELECT max(`endtime`)
-                    FROM `TRIPS` t
-                    WHERE T.`scooterID` = t.`scooterID`
-                  );
-
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM `TRIPS`
-WHERE (`scooterID`,`endtime`) IN (SELECT `scooterID`, max(`endtime`)
-                               FROM `TRIPS`
-                               GROUP BY `scooterID`
-                               ORDER BY `scooterID`
-                             );
-*/
-
-UPDATE `SCOOTERS` S
-SET `locationX` =( SELECT `destinationX`
-                   FROM `TRIPS` T
-                   WHERE T.`scooterID` = S.`scooterID`
-                         AND (`scooterID`,`endtime`) IN
-                             ( SELECT `scooterID`, max(`endtime`)
-                               FROM `TRIPS`
-                               GROUP BY `scooterID`
-                               ORDER BY `scooterID`
-                             )
-                  );
-
-UPDATE `SCOOTERS` S
-SET `locationY` =( SELECT `destinationY`
-                   FROM `TRIPS` T
-                   WHERE T.`scooterID` = S.`scooterID`
-                         AND (`scooterID`,`endtime`) IN
-                             ( SELECT `scooterID`, max(`endtime`)
-                               FROM `TRIPS`
-                               GROUP BY `scooterID`
-                               ORDER BY `scooterID`
-                             )
-                  );
-
-UPDATE `SCOOTERS`
-SET `availability` = 1;
-
+USE scooterDB;
 
 /*R1*/
 SELECT s.`scooterID`, s.`locationX`, s.`locationY`
 FROM `SCOOTERS` s
 WHERE s.`availability` = 1;
 
-
-/*R2 (Si c'est: -> La liste des utilisateurs ayant utilisé toutes les trottinettes qu'ils ont rechargées.)*/
+/*R2*/
 SELECT DISTINCT rl.`userID`
 FROM `RELOADS` rl, `TRIPS` tr
 WHERE rl.`userID` = tr.`userID`
 ORDER BY rl.`userID`;
 
-
 /*R3*/
 SELECT T.`scooterID`
 FROM `TRIPS` T
 GROUP BY T.`scooterID`
-HAVING sum(ST_Distance_Sphere(point(T.`sourceX`, T.`sourceY`),
-                  point(T.`destinationX`, T.`destinationY`))) = ( SELECT max(`Distance`)
-                                                                  FROM ( SELECT S.`scooterID`, sum(ST_Distance_Sphere(point(S.`sourceX`, S.`sourceY`),
-                                                                                                          point(S.`destinationX`, S.`destinationY`))) as `Distance`
-                                                                         FROM `TRIPS` S
-                                                                         GROUP BY S.`scooterID`
-                                                                        ) SUM_SCOOTER_DISTANCE
-                                                                  );
+HAVING sum(ST_Distance_Sphere(point(T.`sourceX`, T.`sourceY`), point(T.`destinationX`, T.`destinationY`)))
+
+       =( SELECT max(`Distance`)
+          FROM ( SELECT S.`scooterID`, sum(ST_Distance_Sphere(point(S.`sourceX`, S.`sourceY`), point(S.`destinationX`, S.`destinationY`))) as `Distance`
+                 FROM `TRIPS` S
+                 GROUP BY S.`scooterID`
+                ) SUM_SCOOTER_DISTANCE
+        );
+
+/*R4*/
+SELECT `scooterID`
+FROM `REPARATIONS`
+GROUP BY `scooterID`
+HAVING count(`scooterID`) >= 10;
+
+/*R5*/
+SELECT `userID`, count(`userID`) as `Total trips` ,SEC_TO_TIME(AVG(TIME_TO_SEC(`duration`))) as `Average duration`, sum(`price`) AS `Total amount (€)`
+FROM `TRIPS`
+GROUP BY `userID`
+HAVING count(`userID`) >= 10;
 
 /*
 CREATE TABLE IF NOT EXISTS `TEST`
@@ -93,8 +54,7 @@ HAVING sum(T.distance) = (SELECT min(`D`)
                                  GROUP BY t.ID
                                 ) K
                        );
-*/
-/*R4*/
+//R4
 SELECT DISTINCT rep.`scooterID`
 FROM `REPARATIONS` rep
 WHERE(
@@ -103,6 +63,4 @@ WHERE(
       WHERE r.`scooterID` = rep.`scooterID`
       GROUP BY r.`scooterID`
     ) >= 10;
-
-
-/*R5
+*/

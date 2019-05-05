@@ -108,6 +108,33 @@ FIELDS TERMINATED BY ';' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
+/*
+SELECT `scooterID`, `endtime`, `destinationX`
+FROM TRIPS
+WHERE scooterID = 0;
+
+SELECT `scooterID`, `endtime`, `destinationX`
+FROM `TRIPS` T
+WHERE `endtime` = ( SELECT max(`endtime`)
+                    FROM `TRIPS` t
+                    WHERE T.`scooterID` = t.`scooterID`
+                  );
+
+SELECT `scooterID`, `endtime`, `destinationX`
+FROM `TRIPS`
+WHERE (`scooterID`,`endtime`) IN (SELECT `scooterID`, max(`endtime`)
+                               FROM `TRIPS`
+                               GROUP BY `scooterID`
+                               ORDER BY `scooterID`
+                             );
+
+(CASE
+WHEN HOUR(`duration`) = 0 THEN 1 + (MINUTE(`duration`) * 0.15) / 100
+WHEN HOUR(`duration`) BETWEEN 1 AND 23 THEN 1 + HOUR(`duration`) * 6,5 + (MINUTE(`duration`) * 0.15) / 100
+ELSE 1 + HOUR(`duration`) DIV 24 * 36 +  HOUR(`duration`) % 24 * 6.5 + (MINUTE(`duration`) * 0.15) / 100
+END)
+*/
+
 SELECT '<CREATE TRIPS TABLE>' AS ' ';
 CREATE TABLE IF NOT EXISTS `TRIPS`
 ( `scooterID` int unsigned NOT NULL,
@@ -118,6 +145,8 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `destinationY` float NOT NULL,
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
+  `duration` TIME AS (TIMEDIFF(`endtime`, `starttime`)),
+  `price` float AS (1 + (HOUR(`duration`) DIV 24) * 36 +  (HOUR(`duration`) % 24) * 6.5 + (MINUTE(`duration`) * 0.15) / 100),
 
   INDEX(scooterID, endtime,destinationX),
   INDEX(userID),
@@ -185,6 +214,33 @@ INTO TABLE `scooterDB`.`REPARATIONS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+
+UPDATE `SCOOTERS` S
+SET `locationX` =( SELECT `destinationX`
+                   FROM `TRIPS` T
+                   WHERE T.`scooterID` = S.`scooterID`
+                         AND (`scooterID`,`endtime`) IN
+                             ( SELECT `scooterID`, max(`endtime`)
+                               FROM `TRIPS`
+                               GROUP BY `scooterID`
+                               ORDER BY `scooterID`
+                             )
+                  );
+
+UPDATE `SCOOTERS` S
+SET `locationY` =( SELECT `destinationY`
+                   FROM `TRIPS` T
+                   WHERE T.`scooterID` = S.`scooterID`
+                         AND (`scooterID`,`endtime`) IN
+                             ( SELECT `scooterID`, max(`endtime`)
+                               FROM `TRIPS`
+                               GROUP BY `scooterID`
+                               ORDER BY `scooterID`
+                             )
+                  );
+
+UPDATE `SCOOTERS`
+SET `availability` = 1;
 
 /*
 CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
