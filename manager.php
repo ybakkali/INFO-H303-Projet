@@ -40,19 +40,19 @@ if (!$link) {
     die("ERROR: (Connection to database was unsuccessful!) : " . mysqli_connect_error());
     echo "\n";
 }
-echo "Connected successfully \n";
+echo "Connection to database was successful. \n";
 
-
+//example
 $req = "SELECT scooterID FROM SCOOTERS";
 $result = mysqli_query($link, $req);
 
 if (mysqli_num_rows($result) > 0) {
     while($row = mysqli_fetch_assoc($result)) {
-        echo "scooterID: " . $row["scooterID"].  "<br>";
+        echo "scooterID: " . $row["scooterID"].  "\n";
     }
 }
 else {
-    echo "0 results";
+    echo "There isn't any result for this request.";
 }
 
 mysqli_close($link);
