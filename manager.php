@@ -107,9 +107,59 @@ function addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone
     if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
         echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
     }
-    return $ID;
+    return $ID; // To display for user
 }
-//addUnregiteredUser('785', '2503250325032503');
-addRegiteredUser('qqq', 'BE12123412341234', 'bakkali', 'Yoyo', '45032145', 'Brux', 1050, 'ULB', 25);
+
+
+function AveScooterPos() { //consulter les trottinettes disponibles et leur localisation
+  $avScotPos_req = "SELECT `scooterID`, `locationX`, `locationY`
+                    FROM `SCOOTERS`
+                    WHERE `availability` = 1";
+  $result = $GLOBALS['link']->query($avScotPos_req);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      echo "Didn't find any results.\n";
+  }
+  return $items;
+}
+
+
+
+function userTripsHistory($uid) { //consulter l'historique des déplacement eectués
+    $history_req = "SELECT *
+           FROM `TRIPS`
+           WHERE `userID` = $uid
+           ORDER BY `endtime`";
+
+    $result = $GLOBALS['link']->query($history_req);
+
+    $items = array();
+    $count = 0;
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $items[$count] = ($row);
+            $count++;
+            //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+        }
+        print_r($items);
+    }
+    else {
+        echo "Didn't find any results.\n";
+    }
+    return $items;
+}
+
+userTripsHistory(500);
 mysqli_close($link);
 ?>
