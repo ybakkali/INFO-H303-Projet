@@ -1,10 +1,11 @@
 <html>
-<title>DataBase Project</title>
 <body>
-	<h1>Trottinettes</h1>
-	Best website ever!
+	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
+	<title> DataBase Project </title>
+	<?php include("header.html");?>
 	<p><a href="login">Login</a>
 	<a href="register">Register</a></p>
-	<a href="https://www.google.com">Going to google.com</a>
+	<a href="https://www.xnxx.com/">Click Me</a>
+	<?php include("footer.html");?>
 </body>
 </html>

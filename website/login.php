@@ -1,10 +1,10 @@
 <html>
-<title>DataBase Project</title>
 <body>
-	<h1>Trottinettes</h1>
-	Best website ever!
+	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
+	<title> DataBase Project - Login </title>
+	<?php include("header.html");?>
 
-<h1>Login</h1>
+<h2>Login</h2>
 
 <?php
 
@@ -91,16 +91,16 @@ function verificarCliente($login, $password) {
 ?>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-	Username: <input type="text" name="username">
+	<h3>Username : <input type="text" name="username">
 	<span class="error"><font color="red"><?php echo $usernameErr;?></font></span>
 	<br><br>
-	Password: <input type="password" name="password">
+	Password : <input type="password" name="password">
 	<span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
 	<br><br>
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="submit" value="Submit"> </h3>
 </form>
 
 <a href="about">Back</a>
-
+<?php include("footer.html");?>
 </body>
 </html>

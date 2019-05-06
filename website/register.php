@@ -1,10 +1,10 @@
 <html>
-<title>DataBase Project</title>
 <body>
-	<h1>Trottinettes</h1>
-	Best website ever!
+	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
+	<title> DataBase Project - Register </title>
+	<?php include("header.html");?>
 
-<h1>Register</h1>
+<h2>Register</h2>
 
 <?php
 
@@ -205,39 +205,29 @@ function test_input($data) {
 }
 ?>
 
-<?php
-if ($charger == "No") echo
-"<style>
-#conditional_part
-{
-  display:none;
-}
-</style>";
-?>
+<?php if ($charger == "No") echo"<style> #conditional_part {display:none;} </style>";?>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
 
-$(document).ready(function(){
-    $('#charger').change(function(){
-        if(this.checked) {
-        	$charger = "Yes";
-            $('#conditional_part').fadeIn();
-        }
-        else {
-        	$charger = "No";
-            $('#conditional_part').fadeOut();
-        }
-
-    });
-});
+	$(document).ready(function(){
+		$('#charger').change(function(){
+			if(this.checked) {
+				$charger = "Yes";
+				$('#conditional_part').fadeIn();
+			}
+			else {
+				$charger = "No";
+				$('#conditional_part').fadeOut();
+			}
+		});
+	});
 
 </script>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
-	<!--Name: <input type="text" name="name" value="<?php echo $name;?>">-->
-	Username : <input type="text" name="username" value="<?php echo $username;?>">
+	<h3>Username : <input type="text" name="username" value="<?php echo $username;?>">
 	<span class="error"><font color="red"><?php echo $usernameErr;?></font></span>
 	<br><br>
 
@@ -287,11 +277,10 @@ $(document).ready(function(){
 		<span class="error"><font color="red"><?php echo $addrZipErr;?></font></span>
 		<br><br></p>
 	</div>
-
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="submit" value="Submit"></h3>
 </form>
 
 <a href="about">Back</a>
-
+<?php include("footer.html");?>
 </body>
 </html>
