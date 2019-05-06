@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
   `duration` TIME AS (TIMEDIFF(`endtime`, `starttime`)),
-  `price` float AS (1 + (HOUR(`duration`) DIV 24) * 36 +  (HOUR(`duration`) % 24) * 6.5 + (MINUTE(`duration`) * 0.15) / 100),
+  `price` float AS (1 + (HOUR(`duration`) DIV 24) * 36 +  (HOUR(`duration`) % 24) * 6.5 + MINUTE(`duration`) * 0.15),
 
   INDEX(scooterID, endtime,destinationX),
   INDEX(userID),

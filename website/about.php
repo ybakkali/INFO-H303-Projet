@@ -5,7 +5,7 @@
 	<?php include("header.html");?>
 	<p><a href="login">Login</a>
 	<a href="register">Register</a></p>
-	<a href="https://www.xnxx.com/">Click Me</a>
+	<a href="https://www.google.com/">Click Me</a>
 	<?php include("footer.html");?>
 </body>
 </html>
