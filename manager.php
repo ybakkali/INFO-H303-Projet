@@ -1,31 +1,6 @@
 <?php
 //do "sudo apt-get install php-mysql" before using
 
-/*
-
-
-$host='localhost';
-$db = 'scooterDB';
-$username = 'root';
-$password = '';
-
-
-try {
-      $link = new PDO("mysql:host=$host;dbname=$db", $username, $password);
-      $link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      echo 'Connection to database was successful.';
-      echo "\n";
-      $req = 'SELECT scooterID, locationX, locationY FROM SCOOTERS WHERE availability = 1';
-      $q = $link->query($req);
-      $q->setFetchMode(PDO::FETCH_ASSOC);
-}
-catch(PDOException $error)
-{
-      echo 'ERROR: (Connection to database was unsuccessful !) : ';
-      echo $error->getMessage();
-      echo "\n";
-}*/
-
 // Parameters
 $host = "127.0.0.1";
 $username = "root";
@@ -119,7 +94,7 @@ function AveScooterPos() { //consulter les trottinettes disponibles et leur loca
 }
 
 
-function infoComplnScooter($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
+function infoCmplnScooter($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
 
     $info_req = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`
                  FROM `SCOOTERS`
@@ -152,8 +127,16 @@ function infoComplnScooter($sid) { // consulter les informations associées à c
 }
 
 
+function complainScooter($scooter_id, $user_id, $cmpln_text) { //introduire une plainte (demande d'intervention) au sujet d'une trottinette
+  $adding = "INSERT INTO `COMPLAINS` (scooterID, userID, description)
+             VALUES ($scooter_id, $user_id, '$cmpln_text')";
+  if (!(mysqli_query($GLOBALS['link'], $adding))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
 
-function userTripsHistory($uid) { //consulter l'historique des déplacement eectués
+
+function userTripsHistory($uid) { //consulter l'historique des déplacement effectués
     $history_req = "SELECT *
                     FROM `TRIPS`
                     WHERE `userID` = $uid
@@ -179,7 +162,7 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement eec
 }
 
 
-/*function organizeRecharge($sid, $uid, ) {
+/*function organizeRecharge($sid, $uid) {
   $allow_rchrg_req = "SELECT `ID`
                       FROM `ALL_USERS`
                       WHERE `lastname` IS NOT NULL AND `ID` = $uid ";
@@ -201,5 +184,5 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement eec
 
 
 
-mysqli_close($link);
+//mysqli_close($link);
 ?>
