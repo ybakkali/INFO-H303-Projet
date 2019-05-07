@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS `ALL_USERS`
 ) engine = innodb;
 
 SELECT '<LOAD ALL_USERS TABLE>' AS '';
-LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml'
+LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml' IGNORE
 INTO TABLE `scooterDB`.`ALL_USERS`
 ROWS IDENTIFIED BY '<user>';
 
-LOAD XML LOCAL INFILE 'data2019/anonyme_users.xml'
+LOAD XML LOCAL INFILE 'data2019/anonyme_users.xml' IGNORE
 INTO TABLE `scooterDB`.`ALL_USERS`
 ROWS IDENTIFIED BY '<user>';
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `USER_ADDRESS`
 ) engine = innodb;
 
 SELECT '<LOAD USER_ADDRESS TABLE>' AS '';
-LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml'
+LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml' IGNORE
 INTO TABLE `scooterDB`.`USER_ADDRESS`
 ROWS IDENTIFIED BY '<address>';
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `MECANICIENS`
 ) engine = innodb;
 
 SELECT '<LOAD MECANICIENS TABLE>' AS '';
-LOAD XML LOCAL INFILE 'data2019/mecaniciens.xml'
+LOAD XML LOCAL INFILE 'data2019/mecaniciens.xml' IGNORE
 INTO TABLE `scooterDB`.`MECANICIENS`
 ROWS IDENTIFIED BY '<mechanic>';
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `MECHANIC_ADDRESS`
 ) engine = innodb;
 
 SELECT '<LOAD MECHANIC_ADDRESS TABLE>' AS '';
-LOAD XML LOCAL INFILE 'data2019/mecaniciens.xml'
+LOAD XML LOCAL INFILE 'data2019/mecaniciens.xml' IGNORE
 INTO TABLE `scooterDB`.`MECHANIC_ADDRESS`
 ROWS IDENTIFIED BY '<address>';
 
@@ -102,11 +102,14 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
 ) engine = innodb;
 
 SELECT '<LOAD SCOOTERS TABLE>' AS '';
-LOAD DATA LOCAL INFILE 'data2019/scooters.csv'
+LOAD DATA LOCAL INFILE 'data2019/scooters.csv' IGNORE
 INTO TABLE `scooterDB`.`SCOOTERS`
 FIELDS TERMINATED BY ';' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+IGNORE 1 ROWS
+(`scooterID`,`commissioningDate`,`modelNumber`,@var,`batteryLevel`)
+SET `complainState` = IF(@var = 'False',0,1);
+
 
 SELECT '<CREATE COMPLAINS TABLE>' AS '';
 CREATE TABLE IF NOT EXISTS `COMPLAINS`
@@ -124,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `COMPLAINS`
 ) engine = innodb;
 
 SELECT '<LOAD COMPLAINS TABLE>' AS '';
-LOAD DATA LOCAL INFILE 'data2019/reparations.csv'
+LOAD DATA LOCAL INFILE 'data2019/reparations.csv' IGNORE
 INTO TABLE `scooterDB`.`COMPLAINS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -151,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `REPARATIONS`
 ) engine = innodb;
 
 SELECT '<LOAD REPARATIONS TABLE>' AS '';
-LOAD DATA LOCAL INFILE 'data2019/reparations.csv'
+LOAD DATA LOCAL INFILE 'data2019/reparations.csv' IGNORE
 INTO TABLE `scooterDB`.`REPARATIONS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -178,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `RELOADS`
 ) engine = innodb;
 
 SELECT '<LOAD RELOADS TABLE>' AS '';
-LOAD DATA LOCAL INFILE 'data2019/reloads.csv'
+LOAD DATA LOCAL INFILE 'data2019/reloads.csv' IGNORE
 INTO TABLE `scooterDB`.`RELOADS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -197,8 +200,6 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `duration` TIME AS (TIMEDIFF(`endtime`, `starttime`)),
   `price` float AS (1 + (HOUR(`duration`) DIV 24) * 36 +  (HOUR(`duration`) % 24) * 6.5 + MINUTE(`duration`) * 0.15),
 
-  INDEX(scooterID, endtime,destinationX),
-  INDEX(userID),
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter FOREIGN KEY(scooterID)
       REFERENCES SCOOTERS(scooterID),
@@ -207,20 +208,21 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
 ) engine = innodb;
 
 SELECT '<LOAD TRIPS TABLE>' AS '';
-LOAD DATA LOCAL INFILE 'data2019/trips.csv'
+LOAD DATA LOCAL INFILE 'data2019/trips.csv' IGNORE
 INTO TABLE `scooterDB`.`TRIPS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+IGNORE 1 ROWS
+(`scooterID`,`userID`,`sourceX`,`sourceY`,`destinationX`,`destinationY`,`starttime`,`endtime`);
 
-UPDATE `SCOOTERS` S, `TRIPS` T
+UPDATE IGNORE `SCOOTERS` S, `TRIPS` T
 SET S.`locationX` = T.`destinationX`, S.`locationY` = T.`destinationY`
 WHERE T.`scooterID` = S.`scooterID`
-      AND (T.`scooterID`,T.`endtime`) IN
-          ( SELECT `scooterID`, max(`endtime`)
-            FROM `TRIPS`
-            GROUP BY `scooterID`
-          );
+      AND T.`endtime` = ( SELECT max(`endtime`)
+                          FROM `TRIPS` t
+                          GROUP BY `scooterID`
+                          HAVING S.`scooterID` = t.`scooterID`
+                        );
 /*
 CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
 ( `ID` int unsigned NOT NULL,
