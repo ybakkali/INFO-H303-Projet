@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
 ( `scooterID` int unsigned NOT NULL,
   `commissioningDate` DATETIME NOT NULL,
   `modelNumber` varchar(30) NOT NULL,
-  `complainState` boolean NOT NULL,
+  `complainState` boolean NOT NULL DEFAULT False,
   `batteryLevel` int NOT NULL,
   `locationX` float  NOT NULL DEFAULT 0,
   `locationY` float  NOT NULL DEFAULT 0,
@@ -185,7 +185,9 @@ LOAD DATA LOCAL INFILE 'data2019/reloads.csv' IGNORE
 INTO TABLE `scooterDB`.`RELOADS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+IGNORE 1 ROWS
+(`scooterID`,`userID`,`initialLoad`,`finalLoad`,@x, @y, @i , @j,`starttime`,`endtime`)
+SET sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
 
 SELECT '<CREATE TRIPS TABLE>' AS '';
 CREATE TABLE IF NOT EXISTS `TRIPS`
@@ -213,7 +215,8 @@ INTO TABLE `scooterDB`.`TRIPS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(`scooterID`,`userID`,`sourceX`,`sourceY`,`destinationX`,`destinationY`,`starttime`,`endtime`);
+(`scooterID`,`userID`,@x, @y, @i , @j ,`starttime`,`endtime`)
+SET sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
 
 UPDATE IGNORE `SCOOTERS` S, `TRIPS` T
 SET S.`locationX` = T.`destinationX`, S.`locationY` = T.`destinationY`
