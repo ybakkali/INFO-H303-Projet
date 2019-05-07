@@ -2,30 +2,32 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Login </title>
-	<?php include("header.html");?>
+	<?php include("global.php");?>
+	<?php session_start();?>
+	<?php include("header.php");?>
 
-<h2>Login</h2>
+<h1 style="padding:100px">Login</h1>
 
 <?php
 
-$username = $password ="";
-$usernameErr = $passwordErr = "";
+$ID = $password ="";
+$IDErr = $passwordErr = "";
 
 $ready = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-// Username
+// ID
 	$ready = true;
-	if (empty($_POST["username"])) {
-		$usernameErr = "Username is required";
+	if (empty($_POST["ID"])) {
+		$IDErr = "ID is required";
 		$ready = false;
 	}
 	else {
-		$username = test_input($_POST["username"]);
-		// check if username only contains letters and numbers
-		if (preg_match("/[^A-Za-z0-9]/",$username)) {
-			$usernameErr = "Only letters and numbers allowed";
+		$ID = test_input($_POST["ID"]);
+		// check if ID only contains letters and numbers
+		if (preg_match("/[^0-9]/",$ID)) {
+			$IDErr = "Only numbers allowed";
 			$ready = false;
 		}
 		else {$ready = $ready && true;}
@@ -46,7 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		else {$ready = $ready && true;}
 	}
 	if ($ready) {
-		verifyLogin($username,$password);
+		verifyLogin($ID,$password);
+		echo "<meta http-equiv=\"refresh\" content=\"0; URL='menu'\"/>";
 	}
 }
 
@@ -57,10 +60,9 @@ function test_input($data) {
 	return $data;
 }
 
-function verifyLogin($username,$password) {
+function verifyLogin($ID,$password) {
 	if (true) {
-		session_start();
-		$_SESSION["username"] = $username;
+		$_SESSION["ID"] = $ID;
 	}
 }
 /*
@@ -91,16 +93,15 @@ function verificarCliente($login, $password) {
 ?>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-	<h3>Username : <input type="text" name="username">
-	<span class="error"><font color="red"><?php echo $usernameErr;?></font></span>
+	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID">
+	<br><span class="error"><font color="red"><?php echo $IDErr;?></font></span>
 	<br><br>
-	Password : <input type="password" name="password">
-	<span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
+	Password<br><input type="password" name="password">
+	<br><span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
 	<br><br>
 	<input type="submit" name="submit" value="Submit"> </h3>
 </form>
 
-<a href="about">Back</a>
-<?php include("footer.html");?>
+<?php include("footer.php");?>
 </body>
 </html>

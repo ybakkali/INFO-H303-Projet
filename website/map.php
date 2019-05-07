@@ -22,10 +22,36 @@
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
  	subdomains: ['a', 'b', 'c']
-}).addTo(map)
+	}).addTo(map)
 
-var marker = L.marker([50.51, 4.21]).addTo(map);
-marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+	var marker = L.marker([50.51, 4.21]).addTo(map);
+	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection({
+		host: "localhost",
+		user: "yourusername",
+		password: "yourpassword",
+		database: "mydb"
+	});
+
+	con.connect(function(err) {
+		if (err) throw err;
+		con.query("SELECT name, address FROM customers", function (err, result, fields) {
+		if (err) throw err;
+		console.log(result);
+		});
+	});
+
+	var markersArray = [];
+
+	for (var i = 0; i < result.length; i++) {
+		
+		var temp = L.marker([result[i].locationX, result[i].locationY]).addTo(map);
+		marker.bindPopup("<b>" + result[i].scooterID + "</b><br>battery" + result[i].batteryLevel).openPopup();
+		markersArray.push(temp);
+	}
 
 </script>
 

@@ -2,19 +2,21 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Register </title>
-	<?php include("header.html");?>
+	<?php include("global.php");?>
+	<?php session_start();?>
+	<?php include("header.php");?>
 
-<h2>Register</h2>
+<h1 style="padding:100px">Register</h1>
 
 <?php
 
 // For all users
-$username = $bankAccount = $password = $passwordVerif = "";
-$usernameErr = $bankAccountErr = $passwordErr = $passwordVerifErr = "";
+$bankAccount = $password = $passwordVerif = "";
+$bankAccountErr = $passwordErr = $passwordVerifErr = "";
 
 // For recharger users
-$firstName = $lastName = $phone = $addrNumber = $addrStreet = $addrCity = $addrZip = "";
-$firstNameErr = $lastNameErr = $phoneErr = $addrNumberErr = $addrStreetErr = $addrCityErr = $addrZipErr = "";
+$firstName = $lastName = $phone = $addrNumber = $addrStreet = $addrCity = $addrPostal = "";
+$firstNameErr = $lastNameErr = $phoneErr = $addrNumberErr = $addrStreetErr = $addrCityErr = $addrPostalErr = "";
 
 $charger = "No";
 
@@ -23,21 +25,6 @@ $ready = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	$ready = true;
-
-// Username
-	if (empty($_POST["username"])) {
-		$usernameErr = "Userame is required";
-		$ready = false;
-	}
-	else {
-		$username = test_input($_POST["username"]);
-		// check if username only contains letters and numbers
-		if (preg_match("/[^A-Za-z0-9]/",$username)) {
-			$usernameErr = "Only letters and numbers allowed";
-			$ready = false;
-		}
-		else {$ready = $ready && true;}
-	}
 
 // Bank Account
 	if (empty($_POST["bankAccount"])) {
@@ -179,16 +166,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			else {$ready = $ready && true;}
 		}
 
-	// AddrZip
-		if (empty($_POST["addrZip"])) {
-			$addrZipErr = "Zip Code is required";
+	// AddrPostal
+		if (empty($_POST["addrPostal"])) {
+			$addrPostalErr = "Postal Code is required";
 			$ready = false;
 		}
 		else {
-			$addrZip = test_input($_POST["addrZip"]);
-			// check if addrZip only contains numbers
-			if (preg_match("/[^0-9]/",$addrZip)) {
-				$addrZipErr = "Only numbers allowed";
+			$addrPostal = test_input($_POST["addrPostal"]);
+			// check if addrPostal only contains numbers
+			if (preg_match("/[^0-9]/",$addrPostal)) {
+				$addrPostalErr = "Only numbers allowed";
 				$ready = false;
 			}
 			else {$ready = $ready && true;}
@@ -227,60 +214,55 @@ function test_input($data) {
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
-	<h3>Username : <input type="text" name="username" value="<?php echo $username;?>">
-	<span class="error"><font color="red"><?php echo $usernameErr;?></font></span>
+	<h3 style = "position:relative; top:-75px">Bank Account<br><input type="text" name="bankAccount" value="<?php echo $bankAccount;?>">
+	<br><span class="error"><font color="red"><?php echo $bankAccountErr;?></font></span>
 	<br><br>
 
-	Bank Account : <input type="text" name="bankAccount" value="<?php echo $bankAccount;?>">
-	<span class="error"><font color="red"><?php echo $bankAccountErr;?></font></span>
+	Password<br><input type="password" name="password">
+	<br><span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
 	<br><br>
 
-	Password : <input type="password" name="password">
-	<span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
+	Verify Password<br><input type="password" name="passwordVerif">
+	<br><span class="error"><font color="red"><?php echo $passwordVerifErr;?></font></span>
 	<br><br>
 
-	Verify Password : <input type="password" name="passwordVerif">
-	<span class="error"><font color="red"><?php echo $passwordVerifErr;?></font></span>
-	<br><br>
-
-	Charger? : <input id="charger" type="checkbox" name="charger" <?php if ($charger == "Yes") echo "checked" ?>>
+	Charger? : <input id="charger" type="checkbox" name="charger" style="width:30px;height:30px" <?php if ($charger == "Yes") echo "checked" ?>></h3>
 	<br><br>
 
 	<div id="conditional_part">
-		First Name : <input type="text" name="firstName" value="<?php echo $firstName;?>">
-		<span class="error"><font color="red"><?php echo $firstNameErr;?></font></span>
+		<h3 style = "position:relative; top:-100px">First Name<br><input type="text" name="firstName" value="<?php echo $firstName;?>">
+		<br><span class="error"><font color="red"><?php echo $firstNameErr;?></font></span>
 		<br><br>
 
-		Last Name : <input type="text" name="lastName" value="<?php echo $lastName;?>">
-		<span class="error"><font color="red"><?php echo $lastNameErr;?></font></span>
+		Last Name<br><input type="text" name="lastName" value="<?php echo $lastName;?>">
+		<br><span class="error"><font color="red"><?php echo $lastNameErr;?></font></span>
 		<br><br>
 
-		Phone : <input type="text" name="phone" value="<?php echo $phone;?>">
-		<span class="error"><font color="red"><?php echo $phoneErr;?></font></span>
+		Phone<br><input type="text" name="phone" value="<?php echo $phone;?>">
+		<br><span class="error"><font color="red"><?php echo $phoneErr;?></font></span></h3>
 		<br><br>
 
-		Address :
+		<h2 style = "position:relative; top:-125px">Address</h2>
 
-		<p>Number : <input type="text" name="addrNumber" value="<?php echo $addrNumber;?>">
-		<span class="error"><font color="red"><?php echo $addrNumberErr;?></font></span>
+		<h4 style = "position:relative; top:-75px">Number<br><input type="text" name="addrNumber" value="<?php echo $addrNumber;?>">
+		<br><span class="error"><font color="red"><?php echo $addrNumberErr;?></font></span>
 		<br><br>
 
-		Street : <input type="text" name="addrStreet" value="<?php echo $addrStreet;?>">
-		<span class="error"><font color="red"><?php echo $addrStreetErr;?></font></span>
+		Street<br><input type="text" name="addrStreet" value="<?php echo $addrStreet;?>">
+		<br><span class="error"><font color="red"><?php echo $addrStreetErr;?></font></span>
 		<br><br>
 
-		City : <input type="text" name="addrCity" value="<?php echo $addrCity;?>">
-		<span class="error"><font color="red"><?php echo $addrCityErr;?></font></span>
+		City<br><input type="text" name="addrCity" value="<?php echo $addrCity;?>">
+		<br><span class="error"><font color="red"><?php echo $addrCityErr;?></font></span>
 		<br><br>
 
-		Zip Code : <input type="text" name="addrZip" value="<?php echo $addrZip;?>">
-		<span class="error"><font color="red"><?php echo $addrZipErr;?></font></span>
-		<br><br></p>
+		Postal Code<br><input type="text" name="addrPostal" value="<?php echo $addrPostal;?>">
+		<br><span class="error"><font color="red"><?php echo $addrPostalErr;?></font></span>
+		<br><br></h4>
 	</div>
-	<input type="submit" name="submit" value="Submit"></h3>
+	<h4 style = "position:relative; top:-75px"><input type="submit" name="submit" value="Submit"></h4>
 </form>
 
-<a href="about">Back</a>
-<?php include("footer.html");?>
+<?php include("footer.php");?>
 </body>
 </html>

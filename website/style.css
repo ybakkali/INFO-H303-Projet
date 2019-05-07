@@ -1,12 +1,12 @@
 body {
-	background: #232323;
+	background: white;
 	text-align: center;
 }
-
+/*
 h1, h2, h3, input[type=text], input[type=password], input[type=submit], a {
 	color: #FFFFFF;
 	background: #232323;
-	/*text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;*/
+	/*text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;
 	text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18;
 	color: #FFFFFF;
 	background: #232323;
@@ -34,7 +34,7 @@ a {
 	font-size: 20px
 }
 
-/*
+
 h2 {
 	font-size: 40px;
 	color: #FFFFFF;
@@ -42,9 +42,9 @@ h2 {
 	text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;
 	color: #FFFFFF;
 	background: #232323;
-}*/
+}
 
-/*h1 {
+h1 {
 	font-size: 80px;
 	text-align: center;
 	color: #FFFFFF;
