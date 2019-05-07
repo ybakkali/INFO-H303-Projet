@@ -42,21 +42,6 @@ if (!$link) {
 }
 //echo "Connection to database was successful. \n";
 
-//example
-/*
-$req = "SELECT scooterID FROM SCOOTERS";
-$result = mysqli_query($link, $req);
-
-if (mysqli_num_rows($result) > 0) {
-    while($row = mysqli_fetch_assoc($result)) {
-        echo "scooterID: " . $row["scooterID"].  "<br>";
-    }
-}
-else {
-    echo "There isn't any result for this request.";
-}
-*/
-
 
 function getRegisteredID() {
     $last_ID_req = "SELECT max(`ID`)
@@ -82,7 +67,7 @@ function getUnregisteredID() {
 }
 
 
-function addUnregiteredUser($password, $bankaccount) {
+function addUnregiteredUser($password, $bankaccount) { //inscrire un nouvel utilisateur (avec ou sans droit de recharge des trottinettes)
     $ID = getUnregisteredID();
     //echo "Your ID is : ", $ID, "\n";
     $adding = "INSERT INTO `ALL_USERS` (ID, password, bankaccount)
@@ -94,7 +79,7 @@ function addUnregiteredUser($password, $bankaccount) {
 }
 
 
-function addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber) {
+function addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber) { //inscrire un nouvel utilisateur (avec ou sans droit de recharge des trottinettes)
     $ID = getRegisteredID();
     //echo "Your ID is : ", $ID, "\n";
     $adding = "INSERT INTO `ALL_USERS` (ID, password, bankaccount, lastname, firstname, phone)
@@ -134,12 +119,45 @@ function AveScooterPos() { //consulter les trottinettes disponibles et leur loca
 }
 
 
+function infoComplnScooter($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
+
+    $info_req = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`
+                 FROM `SCOOTERS`
+                 WHERE `scooterID` = $sid";
+    $result = mysqli_query($GLOBALS['link'], $info_req);
+    if (mysqli_num_rows($result) > 0) {
+            $data1 = mysqli_fetch_assoc($result);
+    }
+    $complain_req = "SELECT `userID`, `date`, `description`
+                     FROM `COMPLAINS`
+                     WHERE `scooterID` = $sid
+                     ORDER BY `date`";
+    $items = array();
+    $count = 0;
+    $result2 = mysqli_query($GLOBALS['link'], $complain_req);
+    if ($result2->num_rows > 0) {
+        while($row = $result2->fetch_assoc()) {
+            $items[$count] = ($row);
+            $count++;
+            //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+        }
+    }
+    else {
+        echo "Didn't find any results.\n";
+    }
+    $res = array();
+    $res[0] = $data1;
+    $res[1] = $items;
+    return $res;
+}
+
+
 
 function userTripsHistory($uid) { //consulter l'historique des déplacement eectués
     $history_req = "SELECT *
-           FROM `TRIPS`
-           WHERE `userID` = $uid
-           ORDER BY `endtime`";
+                    FROM `TRIPS`
+                    WHERE `userID` = $uid
+                    ORDER BY `endtime`";
 
     $result = $GLOBALS['link']->query($history_req);
 
@@ -160,6 +178,28 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement eec
     return $items;
 }
 
-userTripsHistory(500);
+
+/*function organizeRecharge($sid, $uid, ) {
+  $allow_rchrg_req = "SELECT `ID`
+                      FROM `ALL_USERS`
+                      WHERE `lastname` IS NOT NULL AND `ID` = $uid ";
+  $result = mysqli_query($GLOBALS['link'], $allow_rchrg_req);
+  if (mysqli_num_rows($result) > 0) {
+    $adding_rchrg = "INSERT INTO `ALL_USERS` (ID, password, bankaccount, lastname, firstname, phone)
+                     VALUES ($ID, '$password', '$bankaccount', '$lastname', '$firstname', '$phone')";
+    if (!(mysqli_query($GLOBALS['link'], $adding))) {
+        echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+    }
+  }
+
+}*/
+
+
+
+
+
+
+
+
 mysqli_close($link);
 ?>
