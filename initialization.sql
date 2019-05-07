@@ -218,11 +218,11 @@ IGNORE 1 ROWS
 UPDATE IGNORE `SCOOTERS` S, `TRIPS` T
 SET S.`locationX` = T.`destinationX`, S.`locationY` = T.`destinationY`
 WHERE T.`scooterID` = S.`scooterID`
-      AND T.`endtime` = ( SELECT max(`endtime`)
-                          FROM `TRIPS` t
-                          GROUP BY `scooterID`
-                          HAVING S.`scooterID` = t.`scooterID`
-                        );
+      AND (T.`scooterID`,T.`endtime`) IN
+          ( SELECT `scooterID`, max(`endtime`)
+            FROM `TRIPS`
+            GROUP BY `scooterID`
+          );
 /*
 CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
 ( `ID` int unsigned NOT NULL,
