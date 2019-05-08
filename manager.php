@@ -94,24 +94,40 @@ function AveScooterPos() { //consulter les trottinettes disponibles et leur loca
 }
 
 
-function infoCmplnScooter($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
-
+function getScooterInfo($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
     $info_req = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`
                  FROM `SCOOTERS`
                  WHERE `scooterID` = $sid";
     $result = mysqli_query($GLOBALS['link'], $info_req);
     if (mysqli_num_rows($result) > 0) {
-            $data1 = mysqli_fetch_assoc($result);
+            $data = mysqli_fetch_assoc($result);
     }
+    return $data;
+}
+
+
+function getScooterLocation($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
+  $loc_req = "SELECT `locationX`, `locationY`
+               FROM `SCOOTERS`
+               WHERE `scooterID` = $sid";
+  $result = mysqli_query($GLOBALS['link'], $loc_req);
+  if (mysqli_num_rows($result) > 0) {
+          $data = mysqli_fetch_assoc($result);
+  }
+  return $data;
+}
+
+
+function getScooterComplains($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
     $complain_req = "SELECT `userID`, `date`, `description`
                      FROM `COMPLAINS`
                      WHERE `scooterID` = $sid
                      ORDER BY `date`";
     $items = array();
     $count = 0;
-    $result2 = mysqli_query($GLOBALS['link'], $complain_req);
-    if ($result2->num_rows > 0) {
-        while($row = $result2->fetch_assoc()) {
+    $result = mysqli_query($GLOBALS['link'], $complain_req);
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
             $items[$count] = ($row);
             $count++;
             //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
@@ -120,10 +136,7 @@ function infoCmplnScooter($sid) { // consulter les informations associées à ch
     else {
         echo "Didn't find any results.\n";
     }
-    $res = array();
-    $res[0] = $data1;
-    $res[1] = $items;
-    return $res;
+    return $items;
 }
 
 
