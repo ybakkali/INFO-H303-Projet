@@ -49,8 +49,12 @@ function addUnregiteredUser($password, $bankaccount) { //inscrire un nouvel util
                VALUES ($ID, '$password', '$bankaccount')";
     if (!(mysqli_query($GLOBALS['link'], $adding))) {
         echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+        return false;
     }
-    return $ID; // To display for user
+    else {
+        $_SESSION["ID"] = $ID;
+        return true;
+    }
 }
 
 
@@ -61,13 +65,18 @@ function addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone
                VALUES ($ID, '$password', '$bankaccount', '$lastname', '$firstname', '$phone')";
     if (!(mysqli_query($GLOBALS['link'], $adding))) {
         echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+        return false;
     }
     $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
                     VALUES ($ID, '$adrsCity', $adrsZip, '$adrsStreet', $adrsNumber)";
     if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
         echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+        return false;
     }
-    return $ID; // To display for user
+    else {
+        $_SESSION["ID"] = $ID;
+        return true;
+    }
 }
 
 

@@ -2,12 +2,14 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Register </title>
-	<?php include("global.php");?>
-	<?php session_start();?>
-	<?php include("header.php");?>
+	<?php include("global.php");
+			session_start();
+			include("header.php");
+			include("../manager.php");
+			?>
 
 <?php
-
+if (isloggedIn()) echo "<script>window.location = 'menu.php';</script>";
 // For all users
 $bankAccount = $password = $passwordVerif = "";
 $bankAccountErr = $passwordErr = $passwordVerifErr = "";
@@ -71,6 +73,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
 	if (!isset($_POST["charger"])) { // not Charger
 		$charger = "No";
+		if ($ready) {
+				if (addUnregiteredUser($password,$bankAccount)) {
+						echo "<script>
+								alert('Successful Registration\\n\\nYour ID is ".$_SESSION["ID"]."\\n\\nRemember it!')
+								window.location = 'menu.php';
+						</script>";
+				}
+				else {
+						echo "<script>
+								alert('Unsuccessful Registration\\n\\nPlease try again')
+								window.location = 'menu.php';
+							</script>";
+				}
+		}
 	}
 	else { // Charger
 		$charger = "Yes";
@@ -106,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
 	// Phone
 		if (empty($_POST["phone"])) {
-			$phoneErr = "Userame is required";
+			$phoneErr = "Phone is required";
 			$ready = false;
 		}
 		else {
@@ -178,8 +194,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			}
 			else {$ready = $ready && true;}
 		}
+		if ($ready) {
+			if (addRegiteredUser($password, $bankAccount, $lastName, $firstName, $phone, $addrCity, $addrPostal, $addrStreet, $addrNumber)) {
+					echo "<script>
+							alert('Successful Registration\\n\\nYour ID is ".$_SESSION["ID"]."\\n\\nRemember it!')
+							window.location = 'menu.php';
+					</script>";
+			}
+			else {
+					echo "<script>
+							alert('Unsuccessful Registration\\n\\nPlease try again')
+							window.location = 'menu.php';
+						</script>";
+			}
+		}
 	}
-
 }
 
 function test_input($data) {

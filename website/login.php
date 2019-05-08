@@ -7,7 +7,7 @@
 	<?php include("header.php");?>
 
 <?php
-
+if (isloggedIn()) echo "<script>window.location = 'menu.php';</script>";
 $ID = $password ="";
 $IDErr = $passwordErr = "";
 
