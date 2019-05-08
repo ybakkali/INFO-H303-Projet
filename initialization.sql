@@ -91,10 +91,10 @@ ROWS IDENTIFIED BY '<address>';
 SELECT '<CREATE SCOOTERS TABLE>' AS '';
 CREATE TABLE IF NOT EXISTS `SCOOTERS`
 ( `scooterID` int unsigned NOT NULL,
-  `commissioningDate` DATETIME NOT NULL,
+  `commissioningDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modelNumber` varchar(30) NOT NULL,
   `complainState` boolean NOT NULL DEFAULT False,
-  `batteryLevel` int NOT NULL,
+  `batteryLevel` int NOT NULL DEFAULT 4,
   `locationX` float  NOT NULL DEFAULT 0,
   `locationY` float  NOT NULL DEFAULT 0,
   `availability` boolean NOT NULL DEFAULT True,
