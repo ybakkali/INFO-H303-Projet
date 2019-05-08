@@ -95,7 +95,7 @@ function AveScooterPos() { //consulter les trottinettes disponibles et leur loca
 
 
 function getScooterInfo($sid) { // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
-    $info_req = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`
+    $info_req = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`, `locationX`, `locationY`
                  FROM `SCOOTERS`
                  WHERE `scooterID` = $sid";
     $result = mysqli_query($GLOBALS['link'], $info_req);
@@ -103,18 +103,6 @@ function getScooterInfo($sid) { // consulter les informations associées à chaq
             $data = mysqli_fetch_assoc($result);
     }
     return $data;
-}
-
-
-function getScooterLocation($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
-  $loc_req = "SELECT `locationX`, `locationY`
-               FROM `SCOOTERS`
-               WHERE `scooterID` = $sid";
-  $result = mysqli_query($GLOBALS['link'], $loc_req);
-  if (mysqli_num_rows($result) > 0) {
-          $data = mysqli_fetch_assoc($result);
-  }
-  return $data;
 }
 
 
