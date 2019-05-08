@@ -187,7 +187,34 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement effe
 
 }*/
 
+function getNewScooterID() {
+    $last_sid_req = "SELECT max(`scooterID`)
+                     FROM `SCOOTERS`";
+    $result = mysqli_query($GLOBALS['link'], $last_sid_req);
+    if (mysqli_num_rows($result) > 0) {
+            $data = mysqli_fetch_assoc($result);
+    }
+    return $data["max(`scooterID`)"] + 1;
+}
 
+
+function addScooter($model) { // insérer/supprimer une (nouvelle) trottinette dans le système
+  $sid = getNewScooterID();
+  $adding = "INSERT INTO `SCOOTERS` (scooterID, modelNumber)
+             VALUES ($sid, '$model')";
+  if (!(mysqli_query($GLOBALS['link'], $adding))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
+
+
+function removeScooter($sid) { // insérer/supprimer une (nouvelle) trottinette dans le système
+  $adding = "DELETE FROM `SCOOTERS`
+             WHERE `scooterID` = $sid";
+  if (!(mysqli_query($GLOBALS['link'], $adding))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
 
 
 
