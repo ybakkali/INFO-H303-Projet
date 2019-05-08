@@ -217,7 +217,27 @@ function removeScooter($sid) { // insérer/supprimer une (nouvelle) trottinette 
 }
 
 
-
+function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
+        $usrinfo_req = "SELECT `password`, `bankaccount`
+                        FROM `ALL_USERS`
+                        WHERE `ID` = $uid";
+        $result = mysqli_query($GLOBALS['link'], $usrinfo_req);
+        if (mysqli_num_rows($result) > 0) {
+                $data = mysqli_fetch_assoc($result);
+                $deleting = "DELETE FROM `ALL_USERS`
+                             WHERE `ID`=$uid";
+                if (!(mysqli_query($GLOBALS['link'], $deleting))) {
+                    echo "Error : (could not delete data !) : " . $deleting . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+                }
+                //print_r($data['password']);
+                $password = $data['password'];
+                $bankaccount = $data['bankaccount'];
+                addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber);
+        }
+        else {
+          echo "ERROR\n";
+        }
+}
 
 
 
