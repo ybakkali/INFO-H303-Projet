@@ -23,7 +23,7 @@
 	</form>
 
 	<?php
-		if (!empty($_GET["ID"])) {
+		if (!empty($_GET["ID"]) || $_GET["ID"] == "0") {
 			echo "<h1>ID is defined</h1>";
 
 			if (false) {

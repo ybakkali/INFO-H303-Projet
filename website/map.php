@@ -31,7 +31,6 @@
 							marker.bindPopup("<b><a href = \"trottinette.php?ID='.$scooter['scooterID'].'\">'.$scooter['scooterID'].'</a></b><br>I am a popup.");';
 		}
 		echo "</script>";
-		mysqli_close($connection);
 	?>
 
 </body>
