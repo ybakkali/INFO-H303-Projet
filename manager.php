@@ -17,6 +17,33 @@ if (!$link) {
 }
 //echo "Connection to database was successful. \n";
 
+function userAuthentication($uid, $pass) {
+  $user_login_ok = "SELECT `ID`, `password`
+                    FROM `ALL_USERS`
+                    WHERE `ID`=$uid AND `password`=$pass";
+  $result = mysqli_query($GLOBALS['link'], $user_login_req);
+  if (mysqli_num_rows($result) > 0) {
+        return true;
+  }
+  else {
+        return false;
+  }
+}
+
+
+function mecAuthentication($mid, $pass) {
+  $mec_login_ok = "SELECT `mechanicID`, `password`
+                    FROM  `MECANICIENS`
+                    WHERE `mechanicID`=$mid AND `password`=$pass";
+  $result = mysqli_query($GLOBALS['link'], $mec_login_req);
+  if (mysqli_num_rows($result) > 0) {
+        return true;
+  }
+  else {
+        return false;
+  }
+}
+
 
 function getRegisteredID() {
     $last_ID_req = "SELECT max(`ID`)
@@ -238,6 +265,8 @@ function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZi
           echo "ERROR\n";
         }
 }
+
+
 
 
 
