@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
   `batteryLevel` int unsigned NOT NULL DEFAULT 4,
   `locationX` float  NOT NULL DEFAULT 0,
   `locationY` float  NOT NULL DEFAULT 0,
-  `availability` ENUM('available','occupy','inRepair') NOT NULL DEFAULT 'available',
+  `availability` ENUM('available','occupy','inRepair','inReload') NOT NULL DEFAULT 'available',
   PRIMARY KEY(`scooterID`)
 ) engine = innodb;
 
