@@ -9,10 +9,11 @@
 	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
 	crossorigin=""></script>
 
-	<?php include("global.php");?>
-	<?php session_start();?>
-	<?php include("header.php");?>
-	
+	<?php include("global.php");
+				session_start();
+				include("header.php");
+				include("../manager.php")?>
+
 	<br><br><br>
 
 	<form action="trottinette.php" method="GET">
@@ -25,26 +26,13 @@
 		if (!empty($_GET["ID"])) {
 			echo "<h1>ID is defined</h1>";
 
-			// Create connection
-			$connection = mysqli_connect($config["servername"], $config["username"], $config["password"], $config["dbname"]);
-			// Check connection
-			if (!$connection) {
-				die("Connection failed: " . mysqli_connect_error());
-			}
-
-			$sql = "SELECT `scooterID`, `modelNumber`, `commissioningDate`, `batteryLevel`, `locationX`, `locationY`
-				FROM `SCOOTERS`
-				WHERE `scooterID` = ". $_GET['ID'];
-			$result = mysqli_query($connection, $sql);
-
-			if (mysqli_num_rows($result) == 0) {
+			if (false) {
 				echo "<h1 style = 'color: red'>Wrong ID<h1>";
 				exit();
 			}
 
-			$information = mysqli_fetch_assoc($result);
+			$informations = getScooterInfo($_GET["ID"]);
 
-			mysqli_close($connection);
 		}
 
 		else exit();
@@ -55,10 +43,10 @@
 		</div>
 
 		<div class = "w3-half">
-			Scooter ID : <?php echo $information["scooterID"]; ?><br>
-			Commissioning Date : <?php echo $information["commissioningDate"]; ?><br>
-			Model Number : <?php echo $information["modelNumber"]; ?><br>
-			Battery Level : <?php echo $information["batteryLevel"]; ?><br>
+			Scooter ID : <?php echo $informations["scooterID"]; ?><br>
+			Commissioning Date : <?php echo $informations["commissioningDate"]; ?><br>
+			Model Number : <?php echo $informations["modelNumber"]; ?><br>
+			Battery Level : <?php echo $informations["batteryLevel"]; ?><br>
 		</div>
 	</div>
 	<br>
@@ -82,8 +70,8 @@
 	</script>
 	<?php
 		echo "<script>
-				map.setView([".$information["locationX"].",".$information["locationY"]."],15);
-				L.marker([".$information["locationX"].",".$information["locationY"]."]).addTo(map);
+				map.setView([".$informations["locationX"].",".$informations["locationY"]."],15);
+				L.marker([".$informations["locationX"].",".$informations["locationY"]."]).addTo(map);
 			</script>";
 	?>
 
