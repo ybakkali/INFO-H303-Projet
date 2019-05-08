@@ -200,19 +200,33 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement effe
 
 
 /*function organizeRecharge($sid, $uid) {
-  $allow_rchrg_req = "SELECT `ID`
-                      FROM `ALL_USERS`
-                      WHERE `lastname` IS NOT NULL AND `ID` = $uid ";
-  $result = mysqli_query($GLOBALS['link'], $allow_rchrg_req);
-  if (mysqli_num_rows($result) > 0) {
-    $adding_rchrg = "INSERT INTO `ALL_USERS` (ID, password, bankaccount, lastname, firstname, phone)
-                     VALUES ($ID, '$password', '$bankaccount', '$lastname', '$firstname', '$phone')";
-    if (!(mysqli_query($GLOBALS['link'], $adding))) {
-        echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+    $allow_rchrg_req = "SELECT `ID`
+                        FROM `ALL_USERS`
+                        WHERE `lastname` IS NOT NULL AND `ID` = $uid ";
+    $result = mysqli_query($GLOBALS['link'], $allow_rchrg_req);
+    if (mysqli_num_rows($result) > 0) {
+        $sctr_init_req = "SELECT `batteryLevel`, `locationX`, `locationY`
+                          FROM `SCOOTER`
+                          WHERE `scooterID` = $sid";
+        $result = mysqli_query($GLOBALS['link'], $sctr_init_req);
+        if (mysqli_num_rows($result) > 0) {
+                $data = mysqli_fetch_assoc($result);
+        }
+        $init_chrg = $data['batteryLevel'];
+        $init_x = $data['locationX'];
+        $init_y = $data['locationY'];
+        $adding_rchrg = "INSERT INTO `RELOADS` (scooterID, userID, initialLoad, finalLoad, sourceX, sourceY, destinationX, destinationY, starttime, endtime)
+                         VALUES ($sid, $uid, $init_chrg, finalLoad, $init_x, $init_y, destinationX, destinationY, starttime, endtime)";
+        if (!(mysqli_query($GLOBALS['link'], $adding))) {
+            echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+        }
     }
-  }
-
+    else {
+      return false;
+    }
 }*/
+
+
 
 function getNewScooterID() {
     $last_sid_req = "SELECT max(`scooterID`)
@@ -242,6 +256,18 @@ function removeScooter($sid) { // insérer/supprimer une (nouvelle) trottinette 
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
   }
 }
+
+
+function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaque trottinette (libre, utilisée, en recharge, . . . )
+  $update_status = "UPDATE `SCOOTERS`
+                    SET `availability` = $new_status
+                    WHERE `scooterID` = $sid";
+  if (!(mysqli_query($GLOBALS['link'], $update_status))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
+
+
 
 
 function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
