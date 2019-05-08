@@ -26,21 +26,19 @@
 
 	<div class="w3-top">
 		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="home" class="w3-bar-item w3-button w3-wide">QLF Scooters</a>
+			<a href="home.php" class="w3-bar-item w3-button w3-wide">QLF Scooters</a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right w3-hide-small">
 				<?php
 					if (isloggedIn()) {
-						echo '<a href="menu" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Menu</a>';
-						echo '<a href="logout" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Log Out</a>';
+						echo '<a href="menu.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Menu</a>';
+						echo '<a href="logout.php" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Log Out</a>';
 					}
 					else {
-						echo '<a href="login" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Login</a>';
-						echo '<a href="register" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Register</a>';
+						echo '<a href="login.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Login</a>';
+						echo '<a href="register.php" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Register</a>';
 					}
 				?>
-				<!--<a href="login" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Login</a>
-				<a href="register" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Register</a>-->
 			</div>
 		</div>
 	</div>

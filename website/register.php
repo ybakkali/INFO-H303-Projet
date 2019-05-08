@@ -6,8 +6,6 @@
 	<?php session_start();?>
 	<?php include("header.php");?>
 
-<h1 style="padding:100px">Register</h1>
-
 <?php
 
 // For all users
@@ -211,6 +209,8 @@ function test_input($data) {
 	});
 
 </script>
+
+<h1 style="padding:100px">Register</h1>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 

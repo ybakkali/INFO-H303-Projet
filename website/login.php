@@ -6,8 +6,6 @@
 	<?php session_start();?>
 	<?php include("header.php");?>
 
-<h1 style="padding:100px">Login</h1>
-
 <?php
 
 $ID = $password ="";
@@ -49,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 	if ($ready) {
 		verifyLogin($ID,$password);
-		echo "<meta http-equiv=\"refresh\" content=\"0; URL='menu'\"/>";
+		echo "<meta http-equiv=\"refresh\" content=\"0; URL='menu.php'\"/>";
 	}
 }
 
@@ -65,32 +63,11 @@ function verifyLogin($ID,$password) {
 		$_SESSION["ID"] = $ID;
 	}
 }
-/*
-function verificarCliente($login, $password) {
-
-        $sql = "SELECT * FROM users WHERE login = '$login' AND password = '$password'";
-        if(($rs=$this->bd->executarSQL($sql))){
-            if(mysql_fetch_row($rs)==false) {
-                return false;
-            } else {
-                session_start();
-                $the_username = // grab the username from your results set  
-                $_SESSION['username'] = $the_username; 
-
-                // put other things in the session if you like
-                echo "<br><b> <a>Bem-Vindo <font size=2>" .mysql_result($rs,0,"login")."</font></b></a><br><br><br>";     
-
-                return true;
-
-            }
-        }
-        else {
-            return false;
-        }
-    }
-*/
 
 ?>
+
+
+<h1 style="padding:100px">Login</h1>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID">
@@ -103,5 +80,6 @@ function verificarCliente($login, $password) {
 </form>
 
 <?php include("footer.php");?>
+
 </body>
 </html>
