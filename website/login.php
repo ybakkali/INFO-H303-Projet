@@ -61,6 +61,7 @@ function test_input($data) {
 function verifyLogin($ID,$password) {
 	if (true) {
 		$_SESSION["ID"] = $ID;
+		$_SESSION["recharger"] = "Yes";
 	}
 }
 

@@ -7,11 +7,14 @@
 				include("header.php");
 				if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
 	?>
-	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-		<div class="w3-display-center w3-text-white" style="padding:250px; text-shadow: 2px 2px 4px #000000;">
-			<span class="w3-jumbo w3-hide-small">You are in the menu!</span><br>
-		</div>
-	</header>
+	<a href="map.php"><h2 style="padding:250px">Check the available scooters</h2></a>
+	<a href="trottinette.php"><h2 style="padding:250px">Search a specific scooter</h2></a>
+	<a href="menu.php"><h2 style="padding:250px">Check your trips history</h2></a>
+
+	<?php
+		if ($_SESSION["recharger"] == "Yes") echo '<a href="menu.php"><h2 style="padding:250px">Take, recharge and bring back a scooter</h2></a>';
+	?>
+
 <?php include("footer.php");?>
 </body>
 </html>

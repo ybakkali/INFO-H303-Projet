@@ -12,9 +12,7 @@
 	<?php session_start();?>
 	<?php include("header.php");?>
 	<?php include("../manager.php");?>
-	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-		<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; top:125px; width: 80%; height: 80%; border: 1px solid #AAA;"></div>
-	</header>
+		<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; top:60px; width: 100%; height: 93.9%;"></div>
 <script>
 	var map = L.map('map').setView([50.8499268,4.37],15);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
