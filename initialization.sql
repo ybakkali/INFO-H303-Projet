@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `USER_ADDRESS`
   PRIMARY KEY(`ID`),
   CONSTRAINT fk_userID FOREIGN KEY(ID)
       REFERENCES ALL_USERS(ID)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 SELECT '<CREATE MECANICIENS TABLE>' AS '';
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `MECHANIC_ADDRESS`
   PRIMARY KEY(`mechanicID`),
   CONSTRAINT fk_mechanicID FOREIGN KEY(mechanicID)
       REFERENCES MECANICIENS(mechanicID)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 SELECT '<CREATE SCOOTERS TABLE>' AS '';
@@ -71,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
   `locationX` float  NOT NULL DEFAULT 0,
   `locationY` float  NOT NULL DEFAULT 0,
   `lastLocationTime` DATETIME NOT NULL DEFAULT '2017-01-01T09:00:00',
-  `availability` ENUM('available','occupy','inRepair','inReload') NOT NULL DEFAULT 'available',
+  `availability` ENUM('available','occupy','inRepair','inReload','defective') NOT NULL DEFAULT 'available',
   PRIMARY KEY(`scooterID`)
 ) engine = innodb;
 
@@ -86,9 +88,11 @@ CREATE TABLE IF NOT EXISTS `COMPLAINS`
   INDEX(`date`),
   PRIMARY KEY(`userID`,`scooterID`,`date`),
   CONSTRAINT fk_scooter_3 FOREIGN KEY(scooterID)
-      REFERENCES SCOOTERS(scooterID),
+      REFERENCES SCOOTERS(scooterID)
+      ON UPDATE CASCADE,
   CONSTRAINT fk_user_3 FOREIGN KEY(userID)
       REFERENCES ALL_USERS(ID)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 SELECT '<CREATE REPARATIONS TABLE>' AS '';
@@ -97,17 +101,22 @@ CREATE TABLE IF NOT EXISTS `REPARATIONS`
   `userID` int unsigned NOT NULL,
   `mechanicID` varchar(30) NOT NULL,
   `complainTime` DATETIME NOT NULL,
-  `repaireTime` DATETIME NOT NULL,
+  `repaireTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `note` varchar(250) NOT NULL DEFAULT '',
 
   PRIMARY KEY(`userID`,`scooterID`,`mechanicID`,`complainTime`),
   CONSTRAINT fk_scooter_1 FOREIGN KEY(`scooterID`)
-      REFERENCES SCOOTERS(`scooterID`),
-  CONSTRAINT fk_user_1 FOREIGN KEY(`userID`)
-      REFERENCES ALL_USERS(`ID`),
-  CONSTRAINT fk_mechanic_1 FOREIGN KEY(`mechanicID`)
-      REFERENCES MECANICIENS(`mechanicID`),
-  CONSTRAINT fk_complain FOREIGN KEY(`complainTime`)
+      REFERENCES SCOOTERS(scooterID)
+      ON UPDATE CASCADE,
+  CONSTRAINT fk_user_1 FOREIGN KEY(userID)
+      REFERENCES ALL_USERS(`ID`)
+      ON UPDATE CASCADE,
+  CONSTRAINT fk_mechanic_1 FOREIGN KEY(mechanicID)
+      REFERENCES MECANICIENS(`mechanicID`)
+      ON UPDATE CASCADE,
+  CONSTRAINT fk_complain FOREIGN KEY(complainTime)
       REFERENCES COMPLAINS(`date`)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 SELECT '<CREATE RELOADS TABLE>' AS '';
@@ -125,9 +134,11 @@ CREATE TABLE IF NOT EXISTS `RELOADS`
 
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter_2 FOREIGN KEY(scooterID)
-      REFERENCES SCOOTERS(scooterID),
+      REFERENCES SCOOTERS(scooterID)
+      ON UPDATE CASCADE,
   CONSTRAINT fk_user_2 FOREIGN KEY(userID)
       REFERENCES ALL_USERS(ID)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 SELECT '<CREATE TRIPS TABLE>' AS '';
@@ -140,17 +151,28 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `destinationY` DECIMAL(11, 5) NOT NULL,
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
-  `duration` TIME AS (TIMEDIFF(`endtime`, `starttime`)),
-  `price` float AS (1 + (HOUR(`duration`) DIV 24) * 36 +  (HOUR(`duration`) % 24) * 6.5 + MINUTE(`duration`) * 0.15),
+  `duration` TIME NOT NULL,
+  `price` float NOT NULL,
 
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter FOREIGN KEY(scooterID)
-      REFERENCES SCOOTERS(scooterID),
+      REFERENCES SCOOTERS(scooterID)
+      ON UPDATE CASCADE,
   CONSTRAINT fk_user FOREIGN KEY(userID)
       REFERENCES ALL_USERS(ID)
+      ON UPDATE CASCADE
 ) engine = innodb;
 
 DELIMITER |
+SELECT '<CREATE COMPLAINS TRIGGER>' AS '';
+CREATE TRIGGER COMPLAINS_TRIGGER BEFORE INSERT ON `COMPLAINS`
+  FOR EACH ROW
+  BEGIN
+      UPDATE `SCOOTERS` S
+      SET complainState = 1
+      WHERE S.`scooterID` = NEW.scooterID;
+  END |
+
 SELECT '<CREATE REPARATIONS TRIGGER>' AS '';
 CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
   FOR EACH ROW
@@ -162,6 +184,10 @@ CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
       SET state = 'treated'
       WHERE C.`scooterID` = NEW.scooterID AND
             C.`date`      < NEW.repaireTime;
+
+      UPDATE `SCOOTERS` S
+      SET complainState = 0
+      WHERE S.`scooterID` = NEW.scooterID;
     END IF;
   END |
 
@@ -185,6 +211,12 @@ CREATE TRIGGER TRIPS_TRIGGER BEFORE INSERT ON `TRIPS`
     IF NEW.starttime > NEW.endtime THEN
           signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
     ELSE
+
+      SET NEW.duration = TIMEDIFF(NEW.endtime, NEW.starttime),
+          NEW.price = (1 + (HOUR(NEW.duration) DIV 24) * 36
+                       + (HOUR(NEW.duration) % 24) * 6.5
+                       + MINUTE(NEW.duration) * 0.15);
+
       UPDATE IGNORE `SCOOTERS` S
       SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime
       WHERE S.`scooterID` = NEW.scooterID AND NEW.endtime > S.`lastLocationTime`;
@@ -305,48 +337,4 @@ CREATE TABLE IF NOT EXISTS `ALL_USERS`
 
 INSERT INTO ALL_USERS (`ID`) SELECT `ID` FROM REGISTRED_USERS;
 INSERT INTO ALL_USERS (`ID`) SELECT `ID` FROM ANONYME_USERS;
-*/
-
-/*
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM TRIPS
-WHERE scooterID = 0;
-
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM `TRIPS` T
-WHERE `endtime` = ( SELECT max(`endtime`)
-                    FROM `TRIPS` t
-                    WHERE T.`scooterID` = t.`scooterID`
-                  );
-
-SELECT `scooterID`, `endtime`, `destinationX`
-FROM `TRIPS`
-WHERE (`scooterID`,`endtime`) IN (SELECT `scooterID`, max(`endtime`)
-                               FROM `TRIPS`
-                               GROUP BY `scooterID`
-                               ORDER BY `scooterID`
-                             );
-UPDATE `SCOOTERS` S
-SET `locationX` =( SELECT `destinationX`
-                  FROM `TRIPS` T
-                  WHERE T.`scooterID` = S.`scooterID`
-                        AND (`scooterID`,`endtime`) IN
-                            ( SELECT `scooterID`, max(`endtime`)
-                              FROM `TRIPS`
-                              GROUP BY `scooterID`
-                              ORDER BY `scooterID`
-                            )
-                 );
-
-UPDATE `SCOOTERS` S
-SET `locationY` =( SELECT `destinationY`
-                  FROM `TRIPS` T
-                  WHERE T.`scooterID` = S.`scooterID`
-                        AND (`scooterID`,`endtime`) IN
-                            ( SELECT `scooterID`, max(`endtime`)
-                              FROM `TRIPS`
-                              GROUP BY `scooterID`
-                              ORDER BY `scooterID`
-                            )
-                 );
 */
