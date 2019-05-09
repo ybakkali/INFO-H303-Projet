@@ -12,7 +12,7 @@
 	<a href="menu.php"><h2 style="padding:250px">Check your trips history</h2></a>
 
 	<?php
-		if ($_SESSION["recharger"] == "Yes") echo '<a href="menu.php"><h2 style="padding:250px">Take, recharge and bring back a scooter</h2></a>';
+		if ($_SESSION["type"] != "unregistered") echo '<a href="menu.php"><h2 style="padding:250px">Take, recharge and bring back a scooter</h2></a>';
 	?>
 
 </body>

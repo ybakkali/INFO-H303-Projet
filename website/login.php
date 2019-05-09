@@ -2,9 +2,11 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Login </title>
-	<?php include("global.php");
-				session_start();
-				include("header.php");
+	<?php
+		include("global.php");
+		session_start();
+		include("header.php");
+		include("../manager.php");
 	?>
 
 <?php
@@ -18,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 // ID
 	$ready = true;
-	if (empty($_POST["ID"])) {
+	if (empty($_POST["ID"]) || $_POST["ID"] == "0") {
 		$IDErr = "ID is required";
 		$ready = false;
 	}
@@ -47,15 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		else {$ready = $ready && true;}
 	}
 	if ($ready) {
-		verifyLogin($ID,$password);
-		echo "<meta http-equiv=\"refresh\" content=\"0; URL='menu.php'\"/>";
-	}
-}
-
-function verifyLogin($ID,$password) {
-	if (true) {
-		$_SESSION["ID"] = $ID;
-		$_SESSION["recharger"] = "Yes";
+		if (userAuthentication($ID,$password))
+			echo "<script>window.location = 'menu.php'</script>";
+		else
+			echo "Error";
 	}
 }
 
@@ -65,7 +62,7 @@ function verifyLogin($ID,$password) {
 <h1 style="padding:100px">Login</h1>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID" value=<?php echo $ID ?> required>
+	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID" value="<?php echo $ID ?>" required>
 	<br><span class="error"><font color="red"><?php echo $IDErr;?></font></span>
 	<br><br>
 	Password<br><input type="password" name="password" required>
