@@ -15,6 +15,5 @@
 		if ($_SESSION["recharger"] == "Yes") echo '<a href="menu.php"><h2 style="padding:250px">Take, recharge and bring back a scooter</h2></a>';
 	?>
 
-<?php include("footer.php");?>
 </body>
 </html>

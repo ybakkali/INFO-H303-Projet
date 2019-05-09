@@ -2,13 +2,14 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Login </title>
-	<?php include("global.php");?>
-	<?php session_start();?>
-	<?php include("header.php");?>
+	<?php include("global.php");
+				session_start();
+				include("header.php");
+	?>
 
 <?php
 if (isloggedIn()) echo "<script>window.location = 'menu.php';</script>";
-$ID = $password ="";
+$ID = $password = "";
 $IDErr = $passwordErr = "";
 
 $ready = false;
@@ -51,13 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 }
 
-function test_input($data) {
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars($data);
-	return $data;
-}
-
 function verifyLogin($ID,$password) {
 	if (true) {
 		$_SESSION["ID"] = $ID;
@@ -71,16 +65,14 @@ function verifyLogin($ID,$password) {
 <h1 style="padding:100px">Login</h1>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID">
+	<h3 style = "position:relative; top:-75px">ID<br><input type="text" name="ID" value=<?php echo $ID ?> required>
 	<br><span class="error"><font color="red"><?php echo $IDErr;?></font></span>
 	<br><br>
-	Password<br><input type="password" name="password">
+	Password<br><input type="password" name="password" required>
 	<br><span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
 	<br><br>
 	<input type="submit" name="submit" value="Submit"> </h3>
 </form>
-
-<?php include("footer.php");?>
 
 </body>
 </html>

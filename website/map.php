@@ -26,7 +26,7 @@
 		echo "<script>";
 		foreach ($result as $scooter) {
 				echo 'var marker = L.marker(['.$scooter['locationX'].', '.$scooter['locationY'].']).addTo(map);
-							marker.bindPopup("<b><a href = \"trottinette.php?ID='.$scooter['scooterID'].'\">'.$scooter['scooterID'].'</a></b><br>I am a popup.");';
+							marker.bindPopup("<p style = \"text-align: center\"><a href = \"trottinette.php?ID='.$scooter['scooterID'].'\">'.$scooter['scooterID'].'</a></p>");';
 		}
 		echo "</script>";
 	?>

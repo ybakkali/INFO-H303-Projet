@@ -6,7 +6,7 @@
 			session_start();
 			include("header.php");
 			include("../manager.php");
-			?>
+	?>
 
 <?php
 if (isloggedIn()) echo "<script>window.location = 'menu.php';</script>";
@@ -211,12 +211,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 }
 
-function test_input($data) {
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars($data);
-	return $data;
-}
 ?>
 
 <?php if ($charger == "No") echo"<style> #conditional_part {display:none;} </style>";?>
@@ -243,15 +237,15 @@ function test_input($data) {
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
-	<h3 style = "position:relative; top:-75px">Bank Account<br><input type="text" name="bankAccount" value="<?php echo $bankAccount;?>">
+	<h3 style = "position:relative; top:-75px">Bank Account<br><input type="text" name="bankAccount" value="<?php echo $bankAccount?>" required>
 	<br><span class="error"><font color="red"><?php echo $bankAccountErr;?></font></span>
 	<br><br>
 
-	Password<br><input type="password" name="password">
+	Password<br><input type="password" name="password" required>
 	<br><span class="error"><font color="red"><?php echo $passwordErr;?></font></span>
 	<br><br>
 
-	Verify Password<br><input type="password" name="passwordVerif">
+	Verify Password<br><input type="password" name="passwordVerif" required>
 	<br><span class="error"><font color="red"><?php echo $passwordVerifErr;?></font></span>
 	<br><br>
 
@@ -292,6 +286,5 @@ function test_input($data) {
 	<h4 style = "position:relative; top:-75px"><input type="submit" name="submit" value="Submit"></h4>
 </form>
 
-<?php include("footer.php");?>
 </body>
 </html>

@@ -20,21 +20,14 @@
 
 	<form action="trottinette.php" method="GET">
 
-		<input type="text" name="ID" value="<?php if (!empty($_GET['ID'])) echo $_GET['ID'] ?>">
+		<input type="text" name="ID" value="<?php if (isset($_GET["ID"]) && (!empty($_GET["ID"]) || $_GET["ID"] == "0")) echo $_GET["ID"] ?>">
 		<input type="submit" value="Search">
 	</form>
 
 	<?php
-		if (!empty($_GET["ID"]) || $_GET["ID"] == "0") {
-			echo "<h1>ID is defined</h1>";
-
-			if (false) {
-				echo "<h1 style = 'color: red'>Wrong ID<h1>";
-				exit();
-			}
-
+		if (isset($_GET["ID"]) && (!empty($_GET["ID"]) || $_GET["ID"] == "0")) {
 			$informations = getScooterInfo($_GET["ID"]);
-
+			$complains = getScooterComplains($_GET["ID"]);
 		}
 
 		else exit();
@@ -45,10 +38,10 @@
 		</div>
 
 		<div class = "w3-half">
-			Scooter ID : <?php echo $informations["scooterID"]; ?><br>
-			Commissioning Date : <?php echo $informations["commissioningDate"]; ?><br>
-			Model Number : <?php echo $informations["modelNumber"]; ?><br>
-			Battery Level : <?php echo $informations["batteryLevel"]; ?><br>
+			<h2>Scooter ID : <?php echo $informations["scooterID"]; ?></h2><br>
+			<h2>Commissioning Date : <?php echo $informations["commissioningDate"]; ?></h2><br>
+			<h2>Model Number : <?php echo $informations["modelNumber"]; ?></h2><br>
+			<h2>Battery Level : <?php echo $informations["batteryLevel"]; ?></h2><br>
 		</div>
 	</div>
 	<br>
@@ -58,7 +51,29 @@
 		</div>
 
 		<div class = "w3-half">
-			plainte
+
+			<h2 style = "margin-right:285px">Complains</h2>
+			<?php echo $complains[0]["description"] ?>
+			<div style = "text-align: center; overflow: auto; height: 30%;">
+				<table style = "width: 60%">
+				  <tr>
+				    <th>Date</th>
+				    <th>Introduced by</th>
+				    <th>Description</th>
+				  </tr>
+					<?php
+					foreach ($complains as $complain) {
+							echo "<tr>
+										<th>".$complain["date"]."</th>
+										<th>".$complain["userID"]."</th>
+										<th>".$complain["description"]."</th>
+										</tr>";
+					}
+					?>
+				</table>
+			</div>
+			<br>
+			<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> style = "margin-right:285px"><input type="submit" value="Add a new complain"></a>
 		</div>
 	</div>
 	<br><br>
@@ -77,5 +92,4 @@
 			</script>";
 	?>
 
-	<?php include("footer.php");?>
 </body></html>
