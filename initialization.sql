@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
   `batteryLevel` int unsigned NOT NULL DEFAULT 4,
   `locationX` float  NOT NULL DEFAULT 0,
   `locationY` float  NOT NULL DEFAULT 0,
+  `lastLocationTime` DATETIME NOT NULL DEFAULT '2017-01-01T09:00:00',
   `availability` ENUM('available','occupy','inRepair','inReload') NOT NULL DEFAULT 'available',
   PRIMARY KEY(`scooterID`)
 ) engine = innodb;
@@ -150,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
 ) engine = innodb;
 
 DELIMITER |
+SELECT '<CREATE REPARATIONS TRIGGER>' AS '';
 CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
   FOR EACH ROW
   BEGIN
@@ -163,6 +165,7 @@ CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
     END IF;
   END |
 
+SELECT '<CREATE RELOADS TRIGGER>' AS '';
 CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
   FOR EACH ROW
   BEGIN
@@ -175,11 +178,16 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
     END IF;
   END |
 
+SELECT '<CREATE TRIPS TRIGGER>' AS '';
 CREATE TRIGGER TRIPS_TRIGGER BEFORE INSERT ON `TRIPS`
   FOR EACH ROW
   BEGIN
     IF NEW.starttime > NEW.endtime THEN
           signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+    ELSE
+      UPDATE IGNORE `SCOOTERS` S
+      SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime
+      WHERE S.`scooterID` = NEW.scooterID AND NEW.endtime > S.`lastLocationTime`;
     END IF;
   END |
 
@@ -251,14 +259,6 @@ IGNORE 1 ROWS
 (`scooterID`,`userID`,@x, @y, @i , @j ,`starttime`,`endtime`)
 SET sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
 
-UPDATE IGNORE `SCOOTERS` S, `TRIPS` T
-SET S.`locationX` = T.`destinationX`, S.`locationY` = T.`destinationY`
-WHERE T.`scooterID` = S.`scooterID`
-      AND (T.`scooterID`,T.`endtime`) IN
-          ( SELECT `scooterID`, max(`endtime`)
-            FROM `TRIPS`
-            GROUP BY `scooterID`
-          );
 /*
 CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
 ( `ID` int unsigned NOT NULL,
