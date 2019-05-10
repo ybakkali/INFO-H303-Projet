@@ -19,6 +19,13 @@
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 	subdomains: ['a', 'b', 'c']
 	}).addTo(map);
+	var userMarker = L.marker([0,0]).addTo(map);
+	if (navigator.geolocation)
+	    navigator.geolocation.watchPosition(updateUserMarker);
+
+	function updateUserMarker(position) {
+		userMarker.setLatLng([position.coords.latitude,position.coords.longitude]);
+	}
 </script>
 
 <?php

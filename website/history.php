@@ -51,18 +51,20 @@
     <div id="map" style="position:relative; margin-left: auto; margin-right: auto; top:60px; width: 50%; height: 50%;"></div>
 
   <script>
-    var map = L.map('map').setView([0,0],15);
+    var map = L.map('map').setView([0,0],13);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 		subdomains: ['a', 'b', 'c']
 		}).addTo(map);
     var sourceMarker = L.marker([0,0]).addTo(map);
     var destinationMarker = L.marker([0,0]).addTo(map);
+    var path = L.polyline([[0,0],[0,0]],{color: 'red'}).addTo(map);
 
     function showOnMap(sourceX,sourceY,destinationX,destinationY) {
-      map.setView([destinationX,destinationY],15);
       sourceMarker.setLatLng([sourceX,sourceY]);
       destinationMarker.setLatLng([destinationX,destinationY]);
+      path.setLatLngs([[sourceX,sourceY],[destinationX,destinationY]]);
+      map.fitBounds(path.getBounds());
     }
   </script>
 
