@@ -168,11 +168,26 @@ function getAllScootersInfo() { // consulter les informations associées à tout
     return $items;
 }
 
+function getComplainsNumber($sid) {
+    $complain_req = "SELECT count(*) AS `Total`
+                     FROM `COMPLAINS`
+                     WHERE `state` = 'notTreated'
+                     GROUP BY `scooterID`
+                     HAVING `scooterID` = $sid";
+    $result = mysqli_query($GLOBALS['link'], $complain_req);
+    if (mysqli_num_rows($result) > 0) {
+            $data = mysqli_fetch_assoc($result);
+            return $data["Total"];
+    } else {
+      return 0;
+    }
+}
+
 function getScooterComplains($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
     $complain_req = "SELECT `userID`, `date`, `description`
                      FROM `COMPLAINS`
                      WHERE `scooterID` = $sid
-                     ORDER BY `date`";
+                     ORDER BY `date` DESC";
     $items = array();
     $count = 0;
     $result = mysqli_query($GLOBALS['link'], $complain_req);
@@ -226,11 +241,7 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement effe
 
 
 /*function organizeRecharge($sid, $uid) {
-    $allow_rchrg_req = "SELECT `ID`
-                        FROM `ALL_USERS`
-                        WHERE `lastname` IS NOT NULL AND `ID` = $uid ";
-    $result = mysqli_query($GLOBALS['link'], $allow_rchrg_req);
-    if (mysqli_num_rows($result) > 0) {
+
         $sctr_init_req = "SELECT `batteryLevel`, `locationX`, `locationY`
                           FROM `SCOOTER`
                           WHERE `scooterID` = $sid";
@@ -246,10 +257,6 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement effe
         if (!(mysqli_query($GLOBALS['link'], $adding))) {
             echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
         }
-    }
-    else {
-      return false;
-    }
 }*/
 
 
@@ -327,7 +334,7 @@ function addNote($uid, $sid, $mid, $complain_date, $note_text) { //gérer, trait
 }*/
 
 
-function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
+function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
           /*$usrinfo_req = "SELECT `password`, `bankaccount`
                           FROM `ALL_USERS`
                           WHERE `ID` = $uid";

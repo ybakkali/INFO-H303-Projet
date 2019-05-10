@@ -171,6 +171,9 @@ CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
   BEGIN
       IF NEW.availability = 'defective' THEN
         SET NEW.locationX = NULL, NEW.locationY = NULL, NEW.lastLocationTime = NULL;
+      ELSEIF (NEW.availability = 'available' OR NEW.availability = 'inRepair')
+               AND OLD.availability = 'defective' THEN
+               signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
       END IF;
   END |
 

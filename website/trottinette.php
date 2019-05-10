@@ -53,7 +53,6 @@
 		<div class = "w3-half">
 
 			<h2 style = "margin-right:285px">Complains</h2>
-			<?php echo $complains[0]["description"] ?>
 			<div style = "text-align: center; overflow: auto; height: 30%;">
 				<table style = "width: 60%">
 				  <tr>
