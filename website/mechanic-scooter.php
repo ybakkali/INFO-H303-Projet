@@ -1,88 +1,100 @@
-<html>
-<body>
-	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
-	<title> DataBase Project - Scooter </title>
-	<?php include("global.php");
-				session_start();
-				include("header.php");
-        include("../manager.php");
-				if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) echo "<script>window.location = 'home.php';</script>";
-	?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<style>
+		#scrolltable { margin-top: 80px; height: 500px; overflow: auto; }
+		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
+		#scrolltable tr:nth-child(even) { background: #EEE; }
+		#scrolltable th div { position: absolute; margin-top: -25px; }
+		.c1 {width: 87px;}
+		.c2 {width: 170px;}
+		.c3 {width: 120px;}
+		.c4 {width: 90px;}
+		.c5 {width: 115px;}
+		.c6 {width: 132px;}
+		.c7 {width: 130px;}
+		.c8 {width: 100px;}
+		</style>
+		<title> DataBase Project - Scooter </title>
+	</head>
+	<body>
+		<?php include("global.php");
+					session_start();
+					include("header.php");
+	        include("../manager.php");
+					if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) echo "<script>window.location = 'home.php';</script>";
+		?>
 
-  <?php
+		<?php
 
-	  if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
-		 		if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
-	      		removeScooter($_GET["ID"]);
-				else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
-						repairScooter($_GET["ID"]);
-				else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
-						fixScooter($_GET["ID"]);
+		  if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
+			 		if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
+		      		removeScooter($_GET["ID"]);
+					else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
+							repairScooter($_GET["ID"]);
+					else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
+							fixScooter($_GET["ID"]);
+			}
+		?>
+
+		<script>
+		window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
+		function deleteScooter(id) {
+		  if (confirm("Do you really want to delete the scooter "+id+" ?"))
+		    window.location = "mechanic-scooter.php?ID="+id +"&delete=true";
 		}
-  ?>
 
-  <script>
-    window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
-    function deleteScooter(id) {
-      if (confirm("Do you really want to delete the scooter "+id+" ?"))
-        window.location = "mechanic-scooter.php?ID="+id +"&delete=true";
-    }
+			function repairScooter(id) {
+				if (confirm("Do you really want to repair the scooter "+id+" ?"))
+					window.location = "mechanic-scooter.php?ID="+id +"&repair=true";
+			}
 
-		function repairScooter(id) {
-			if (confirm("Do you really want to repair the scooter "+id+" ?"))
-				window.location = "mechanic-scooter.php?ID="+id +"&repair=true";
-		}
+			function fixScooter(id) {
+				if (confirm("Is the scooter "+id+" really repaired?"))
+					window.location = "mechanic-scooter.php?ID="+id +"&fix=true";
+			}
+		</script>
 
-		function fixScooter(id) {
-			if (confirm("Is the scooter "+id+" really repaired?"))
-				window.location = "mechanic-scooter.php?ID="+id +"&fix=true";
-		}
-  </script>
-
-	<h1 style="padding:100px">Scooter</h1>
-    <div style = "position:relative; top:-75px; text-align: center; overflow: auto; height: 65%;">
-      <table style = "width: 100%; text-align: center;">
-        <col width="5%">
-        <col>
-        <col>
-        <col width="5%">
-        <col width="5%">
-        <col>
-        <col>
-        <col>
-        <col>
-        <col>
-        <tr>
-          <th>Scooter ID</th>
-          <th>Commissioning Date</th>
-          <th>Model Number</th>
-          <th>Complains</th>
-          <th>Battery Level</th>
-          <th>Location</th>
-          <th>Last Time Used</th>
-          <th>Availability</th>
-          <th colspan="2">Options</th>
-        </tr>
-        <?php
-        $scooters = getAllScootersInfo();
-        foreach ($scooters as $scooter) {
-						$totalComplains = getComplainsNumber($scooter["scooterID"]);
-            echo "<tr>
-                  <td>".$scooter["scooterID"]."</td>
-                  <td>".$scooter["commissioningDate"]."</td>
-                  <td>".$scooter["modelNumber"]."</td>
-                  <td>".$totalComplains."</td>
-                  <td>".$scooter["batteryLevel"]."</td>
-                  <td>".$scooter["locationX"].", ".$scooter["locationY"]."</td>
-                  <td>".$scooter["lastLocationTime"]."</td>
-                  <td>".$scooter["availability"]."</td>
-                  <td><button onclick='deleteScooter(".$scooter["scooterID"].")'>Delete</button></td>
-									<td><button onclick='repairScooter(".$scooter["scooterID"].")'>Repair</button></td>
-									<td><button onclick='fixScooter(".$scooter["scooterID"].")'>Fix</button></td>
-									</tr>";
-        }
-        ?>
-      </table>
-    </div>
-</body>
+		<div id="scrolltable">
+	    <table>
+			<thead>
+				<tr>
+		        <th><div>Scooter ID</div></th>
+		        <th><div>Commissioning Date</div></th>
+		        <th><div>Model Number</div></th>
+		        <th><div>Complains</div></th>
+		        <th><div>Battery Level</div></th>
+		        <th><div>Location</div></th>
+		        <th><div>Last Time Used</div></th>
+		        <th><div>Availability</div></th>
+		        <th coldiv="3"><div>Options</div></th>
+			    </tr>
+			</thead>
+			<tbody>
+				<tr>
+				<?php
+				$scooters = getAllScootersInfo();
+				foreach ($scooters as $scooter) {
+							$totalComplains = getComplainsNumber($scooter["scooterID"]);
+				  echo "<tr>
+				        <td class='c1'>".$scooter["scooterID"]."</td>
+				        <td class='c2'>".$scooter["commissioningDate"]."</td>
+				        <td class='c3'>".$scooter["modelNumber"]."</td>
+				        <td class='c4'>".$totalComplains."</td>
+				        <td class='c5'>".$scooter["batteryLevel"]."</td>
+				        <td class='c6'>".$scooter["locationX"].", ".$scooter["locationY"]."</td>
+				        <td class='c7'>".$scooter["lastLocationTime"]."</td>
+				        <td class='c8'>".$scooter["availability"]."</td>
+				        <td><button onclick='deleteScooter(".$scooter["scooterID"].")'>Delete</button></td>
+										<td><button onclick='repairScooter(".$scooter["scooterID"].")'>Repair</button></td>
+										<td><button onclick='fixScooter(".$scooter["scooterID"].")'>Fix</button></td>
+										</tr>";
+				}
+				?>
+				</tr>
+			</tbody>
+	    </table>
+	  </div>
+	</body>
 </html>
