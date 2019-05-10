@@ -275,12 +275,13 @@ function addScooter($model) { // insérer/supprimer une (nouvelle) trottinette d
 }
 
 
-function removeScooter($sid) { // insérer/supprimer une (nouvelle) trottinette dans le système
-  $adding = "DELETE FROM `SCOOTERS`
+function crossOutScooter($sid) { //(remove (?)) - insérer/supprimer une (nouvelle) trottinette dans le système
+  /*$adding = "DELETE FROM `SCOOTERS`
              WHERE `scooterID` = $sid";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
-  }
+  }*/
+  updateScooterStatus($sid, 'inRepair');
 }
 
 
@@ -297,25 +298,37 @@ function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaq
 
 
 function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
-        $usrinfo_req = "SELECT `password`, `bankaccount`
-                        FROM `ALL_USERS`
-                        WHERE `ID` = $uid";
-        $result = mysqli_query($GLOBALS['link'], $usrinfo_req);
-        if (mysqli_num_rows($result) > 0) {
-                $data = mysqli_fetch_assoc($result);
-                $deleting = "DELETE FROM `ALL_USERS`
-                             WHERE `ID`=$uid";
-                if (!(mysqli_query($GLOBALS['link'], $deleting))) {
-                    echo "Error : (could not delete data !) : " . $deleting . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
-                }
-                //print_r($data['password']);
-                $password = $data['password'];
-                $bankaccount = $data['bankaccount'];
-                addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber);
-        }
-        else {
-          echo "ERROR\n";
-        }
+          /*$usrinfo_req = "SELECT `password`, `bankaccount`
+                          FROM `ALL_USERS`
+                          WHERE `ID` = $uid";
+          $result = mysqli_query($GLOBALS['link'], $usrinfo_req);
+          if (mysqli_num_rows($result) > 0) {
+                  $data = mysqli_fetch_assoc($result);
+                  $deleting = "DELETE FROM `ALL_USERS`
+                               WHERE `ID`=$uid";
+                  if (!(mysqli_query($GLOBALS['link'], $deleting))) {
+                      echo "Error : (could not delete data !) : " . $deleting . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+                  }
+                  //print_r($data['password']);
+                  $password = $data['password'];
+                  $bankaccount = $data['bankaccount'];
+                  addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber);
+          }
+          else {
+            echo "ERROR\n";
+          }*/
+          $new_id = getRegisteredID();
+          $update_user = "UPDATE `ALL_USERS`
+                          SET `ID` = $new_id, `lastname` = '$lastname', `firstname` = '$firstname', `phone` = '$phone'
+                          WHERE `ID` = $uid";
+          if (!(mysqli_query($GLOBALS['link'], $update_user))) {
+              echo "Error : (could not insert new data !) : " . $update_user . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+          }
+          $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
+                          VALUES ($new_id, '$adrsCity', $adrsZip, '$adrsStreet', $adrsNumber)";
+          if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
+              echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+          }
 }
 
 
