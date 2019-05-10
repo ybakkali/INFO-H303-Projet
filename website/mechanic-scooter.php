@@ -56,7 +56,7 @@
           <th>Scooter ID</th>
           <th>Commissioning Date</th>
           <th>Model Number</th>
-          <th>Complain State</th>
+          <th>Complains</th>
           <th>Battery Level</th>
           <th>Location</th>
           <th>Last Time Used</th>
@@ -66,11 +66,12 @@
         <?php
         $scooters = getAllScootersInfo();
         foreach ($scooters as $scooter) {
+						$totalComplains = getComplainsNumber($scooter["scooterID"]);
             echo "<tr>
                   <td>".$scooter["scooterID"]."</td>
                   <td>".$scooter["commissioningDate"]."</td>
                   <td>".$scooter["modelNumber"]."</td>
-                  <td>".$scooter["complainState"]."</td>
+                  <td>".$totalComplains."</td>
                   <td>".$scooter["batteryLevel"]."</td>
                   <td>".$scooter["locationX"].", ".$scooter["locationY"]."</td>
                   <td>".$scooter["lastLocationTime"]."</td>
