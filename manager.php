@@ -275,15 +275,15 @@ function addScooter($model) { // insérer/supprimer une (nouvelle) trottinette d
 }
 
 
-function removeScooter($sid) { //(remove (?)) - insérer/supprimer une (nouvelle) trottinette dans le système
+function removeScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
   updateScooterStatus($sid, 'defective');
 }
 
-function repairScooter($sid) { //(remove (?)) - insérer/supprimer une (nouvelle) trottinette dans le système
+function repairScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
   updateScooterStatus($sid, 'inRepair');
 }
 
-function fixScooter($sid) { //(remove (?)) - insérer/supprimer une (nouvelle) trottinette dans le système
+function fixScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
   updateScooterStatus($sid, 'available');
 }
 
@@ -292,11 +292,39 @@ function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaq
                     SET `availability` = '$new_status'
                     WHERE `scooterID` = $sid";
   if (!(mysqli_query($GLOBALS['link'], $update_status))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo "Error : (could not insert new data !) : " . $update_status . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
 
+/*function closeComplaint($uid, $sid, $date) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
+  updateComplaintState($uid, $sid, $date, 'treated');
+}
+
+
+function verifyingComplaint($uid, $sid, $date) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
+  updateComplaintState($uid, $sid, $date, 'inProcess');
+}
+
+
+function updateComplaintState($uid, $sid, $date, $new_state) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
+  $update_status = "UPDATE `COMPLAINS`
+                    SET `state` = '$new_state'
+                    WHERE `scooterID` = $sid AND `userID` = $uid AND `date` = $date";
+  if (!(mysqli_query($GLOBALS['link'], $update_state))) {
+      echo "Error : (could not insert new data !) : " . $update_state . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
+
+
+function addNote($uid, $sid, $mid, $complain_date, $note_text) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
+  $update_req = "UPDATE `REPARATIONS`
+                 SET `note` = '$note_text'
+                 WHERE `scooterID` = $sid AND `userID` = $uid AND `mechanicID` = $mid AND `complainTime` = $complain_date";
+  if (!(mysqli_query($GLOBALS['link'], $update_req))) {
+      echo "Error : (could not insert new data !) : " . $update_req . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}*/
 
 
 function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
@@ -333,9 +361,9 @@ function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZi
           }
 }
 
-
-
-
+/*
+$d = new DateTime('2017-01-01T19:40:36');
+addNote(574,1000274,78849393673150838933, $d, "ok");*/
 //crossOutScooter(600);
 //mysqli_close($link);
 ?>
