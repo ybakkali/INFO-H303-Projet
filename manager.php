@@ -281,13 +281,13 @@ function crossOutScooter($sid) { //(remove (?)) - insérer/supprimer une (nouvel
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
   }*/
-  updateScooterStatus($sid, 'inRepair');
+  updateScooterStatus($sid, 'defective');
 }
 
 
 function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaque trottinette (libre, utilisée, en recharge, . . . )
   $update_status = "UPDATE `SCOOTERS`
-                    SET `availability` = $new_status
+                    SET `availability` = ''$new_status'
                     WHERE `scooterID` = $sid";
   if (!(mysqli_query($GLOBALS['link'], $update_status))) {
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
@@ -334,6 +334,6 @@ function covertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZi
 
 
 
-
+//crossOutScooter(600);
 //mysqli_close($link);
 ?>
