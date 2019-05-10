@@ -17,7 +17,7 @@
     include("../manager.php");
 		if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
 	?>
-
+	<script src="popup.js"></script>
 	<h1 style="padding:100px">Scooter</h1>
     <div style = "position:relative; top:-75px; text-align: center; overflow: auto; height: 65%;">
       <table style = " position:relative; margin-left: auto; margin-right: auto; width: 75%; text-align: center;">
@@ -48,7 +48,11 @@
         ?>
       </table>
     </div>
-    <div id="map" style="position:relative; margin-left: auto; margin-right: auto; top:60px; width: 50%; height: 50%;"></div>
+		<div class="modal" id="modal">
+			<div class="modal-content">
+    		<div id="map" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
+			</div>
+		</div>
 
   <script>
     var map = L.map('map').setView([0,0],13);
@@ -65,8 +69,8 @@
       destinationMarker.setLatLng([destinationX,destinationY]);
       path.setLatLngs([[sourceX,sourceY],[destinationX,destinationY]]);
       map.fitBounds(path.getBounds());
+			toggleModal();
     }
   </script>
-
 </body>
 </html>
