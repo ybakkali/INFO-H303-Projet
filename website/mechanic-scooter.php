@@ -10,16 +10,33 @@
 	?>
 
   <?php
-    if (isset($_GET["ID"]) && !empty('$_GET["ID"]'))
-      removeScooter($_GET["ID"]);
+
+	  if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
+		 		if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
+	      		removeScooter($_GET["ID"]);
+				else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
+						repairScooter($_GET["ID"]);
+				else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
+						fixScooter($_GET["ID"]);
+		}
   ?>
 
   <script>
-    //window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
+    window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
     function deleteScooter(id) {
       if (confirm("Do you really want to delete the scooter "+id+" ?"))
-        window.location = "mechanic-scooter.php?ID="+id;
+        window.location = "mechanic-scooter.php?ID="+id +"&delete=true";
     }
+
+		function repairScooter(id) {
+			if (confirm("Do you really want to repair the scooter "+id+" ?"))
+				window.location = "mechanic-scooter.php?ID="+id +"&repair=true";
+		}
+
+		function fixScooter(id) {
+			if (confirm("Is the scooter "+id+" really repaired?"))
+				window.location = "mechanic-scooter.php?ID="+id +"&fix=true";
+		}
   </script>
 
 	<h1 style="padding:100px">Scooter</h1>
@@ -59,8 +76,9 @@
                   <td>".$scooter["lastLocationTime"]."</td>
                   <td>".$scooter["availability"]."</td>
                   <td><button onclick='deleteScooter(".$scooter["scooterID"].")'>Delete</button></td>
-                  <td>Modify</td>
-                  </tr>";
+									<td><button onclick='repairScooter(".$scooter["scooterID"].")'>Repair</button></td>
+									<td><button onclick='fixScooter(".$scooter["scooterID"].")'>Fix</button></td>
+									</tr>";
         }
         ?>
       </table>

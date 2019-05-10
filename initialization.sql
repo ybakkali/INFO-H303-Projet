@@ -70,9 +70,9 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
   `modelNumber` varchar(30) NOT NULL,
   `complainState` boolean NOT NULL DEFAULT False,
   `batteryLevel` int unsigned NOT NULL DEFAULT 4,
-  `locationX` float  NOT NULL DEFAULT 0,
-  `locationY` float  NOT NULL DEFAULT 0,
-  `lastLocationTime` DATETIME NOT NULL DEFAULT '2017-01-01T09:00:00',
+  `locationX` float  NULL,
+  `locationY` float  NULL,
+  `lastLocationTime` DATETIME NULL DEFAULT '2017-01-01T09:00:00',
   `availability` ENUM('available','occupy','inRepair','inReload','defective') NOT NULL DEFAULT 'available',
   PRIMARY KEY(`scooterID`)
 ) engine = innodb;
@@ -164,6 +164,16 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
 ) engine = innodb;
 
 DELIMITER |
+
+SELECT '<CREATE SCOOTERS TRIGGER>' AS '';
+CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
+  FOR EACH ROW
+  BEGIN
+      IF NEW.availability = 'defective' THEN
+        SET NEW.locationX = NULL, NEW.locationY = NULL, NEW.lastLocationTime = NULL;
+      END IF;
+  END |
+
 SELECT '<CREATE COMPLAINS TRIGGER>' AS '';
 CREATE TRIGGER COMPLAINS_TRIGGER BEFORE INSERT ON `COMPLAINS`
   FOR EACH ROW
