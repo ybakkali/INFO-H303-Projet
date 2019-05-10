@@ -41,25 +41,28 @@
                   <td><a href='trottinette.php?ID=".$trip["scooterID"]."'>".$trip["scooterID"]."</a></td>
                   <td>".$trip["starttime"]."</td>
                   <td>".$trip["duration"]."</td>
-                  <td>".$trip["price"]."</td>
-                  <td><button onclick='showOnMap((".$trip["sourceX"].",".$trip["sourceY"].")(".$trip["destinationX"].",".$trip["destinationY"]."))'>Show path on map</button></td>
+                  <td>".$trip["price"]." €</td>
+                  <td><button onclick='showOnMap(".$trip["sourceX"].",".$trip["sourceY"].",".$trip["destinationX"].",".$trip["destinationY"].")'>Show path on map</button></td>
                   </tr>";
         }
         ?>
       </table>
     </div>
+    <div id="map" style="position:relative; margin-left: auto; margin-right: auto; top:60px; width: 50%; height: 50%;"></div>
 
   <script>
-    var map = L.map('map');
+    var map = L.map('map').setView([0,0],15);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 		subdomains: ['a', 'b', 'c']
 		}).addTo(map);
-    var sourceMarker = L.marker([0][0]).addTo(map);
-    var destinationMarker = L.marker([0][0]).addTo(map);
+    var sourceMarker = L.marker([0,0]).addTo(map);
+    var destinationMarker = L.marker([0,0]).addTo(map);
 
-    function showOnMap(source,destination) {
-
+    function showOnMap(sourceX,sourceY,destinationX,destinationY) {
+      map.setView([destinationX,destinationY],15);
+      sourceMarker.setLatLng([sourceX,sourceY]);
+      destinationMarker.setLatLng([destinationX,destinationY]);
     }
   </script>
 
