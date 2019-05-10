@@ -31,7 +31,9 @@
 			<div class="w3-right w3-hide-small">
 				<?php
 					if (isloggedIn()) {
-						echo '<a href="menu.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Menu</a>';
+						echo '<a href="';
+						if ($_SESSION["type"] == "mechanic") echo "mechanic-";
+						echo 'menu.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Menu</a>';
 						echo '<a href="logout.php" class="w3-bar-item w3-button"><i class="fa fa-pencil"></i> Log Out</a>';
 					}
 					else {

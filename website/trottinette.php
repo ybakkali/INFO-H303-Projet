@@ -20,12 +20,12 @@
 
 	<form action="trottinette.php" method="GET">
 
-		<input type="text" name="ID" value="<?php if (isset($_GET["ID"]) && (!empty($_GET["ID"]) || $_GET["ID"] == "0")) echo $_GET["ID"] ?>">
+		<input type="text" name="ID" value="<?php if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) echo $_GET["ID"] ?>">
 		<input type="submit" value="Search">
 	</form>
 
 	<?php
-		if (isset($_GET["ID"]) && (!empty($_GET["ID"]) || $_GET["ID"] == "0")) {
+		if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 			$informations = getScooterInfo($_GET["ID"]);
 			$complains = getScooterComplains($_GET["ID"]);
 		}

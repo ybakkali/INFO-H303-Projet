@@ -7,13 +7,15 @@
 				include("header.php");
 				if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
 	?>
-	<a href="map.php"><h2 style="padding:250px">Check the available scooters</h2></a>
-	<a href="trottinette.php"><h2 style="padding:250px">Search a specific scooter</h2></a>
-	<a href="menu.php"><h2 style="padding:250px">Check your trips history</h2></a>
-
+	<h1 style="padding:100px">Menu</h1>
+	<div style = "position:relative; top:-75px">
+		<a href="map.php"><h2>Check the available scooters</h2></a>
+		<a href="trottinette.php"><h2>Search a specific scooter</h2></a>
+		<a href="menu.php"><h2>Check your trips history</h2></a>
 	<?php
-		if ($_SESSION["type"] != "unregistered") echo '<a href="menu.php"><h2 style="padding:250px">Take, recharge and bring back a scooter</h2></a>';
+		if ($_SESSION["type"] != "unregistered") echo '<a href="menu.php"><h2>Take, recharge and bring back a scooter</h2></a>';
 	?>
+	</div>
 
 </body>
 </html>

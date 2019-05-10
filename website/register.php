@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$ready = true;
 
 // Bank Account
-	if (empty($_POST["bankAccount"])) {
+	if (empty('$_POST["bankAccount"]')) {
 		$bankAccountErr = "Bank Account is required";
 		$ready = false;
 	}
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 
 //Password
-	if (empty($_POST["password"])) {
+	if (empty('$_POST["password"]')) {
 			$passwordErr = "Password is required";
 			$ready = false;
 	}
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 
 //Verify Password
-	if (empty($_POST["passwordVerif"])) {
+	if (empty('$_POST["passwordVerif"]')) {
 			$passwordVerifErr = "Verify Password is required";
 			$ready = false;
 	}
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	else { // Charger
 		$charger = "Yes";
 	//First Name
-		if (empty($_POST["firstName"])) {
+		if (empty('$_POST["firstName"]')) {
 				$firstNameErr = "First Name is required";
 				$ready = false;
 		}
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	//Last Name
-		if (empty($_POST["lastName"])) {
+		if (empty('$_POST["lastName"]')) {
 				$lastNameErr = "Last Name is required";
 				$ready = false;
 		}
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	// Phone
-		if (empty($_POST["phone"])) {
+		if (empty('$_POST["phone"]')) {
 			$phoneErr = "Phone is required";
 			$ready = false;
 		}
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	// AddrNumber
-		if (empty($_POST["addrNumber"])) {
+		if (empty('$_POST["addrNumber"]')) {
 			$addrNumberErr = "Number is required";
 			$ready = false;
 		}
@@ -151,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	// AddrStreet
-		if (empty($_POST["addrStreet"])) {
+		if (empty('$_POST["addrStreet"]')) {
 			$addrStreetErr = "Street is required";
 			$ready = false;
 		}
@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	// AddrCity
-		if (empty($_POST["addrCity"])) {
+		if (empty('$_POST["addrCity"]')) {
 			$addrCityErr = "City is required";
 			$ready = false;
 		}
@@ -181,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 
 	// AddrPostal
-		if (empty($_POST["addrPostal"])) {
+		if (empty('$_POST["addrPostal"]')) {
 			$addrPostalErr = "Postal Code is required";
 			$ready = false;
 		}

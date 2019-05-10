@@ -7,6 +7,7 @@
 		session_start();
 		include("header.php");
 		include("../manager.php");
+		if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
 	?>
 
 	<?php
@@ -20,7 +21,7 @@
 		{
 		// ID
 			$ready = true;
-			if (empty($_POST["ID"])) {
+			if (empty('$_POST["ID"]')) {
 				$IDErr = "ID is required";
 				$ready = false;
 			}
@@ -35,7 +36,7 @@
 			}
 
 		//Description
-			if (empty($_POST["description"])) {
+			if (empty('$_POST["description"]')) {
 					$descriptionErr = "Description is required";
 					$ready = false;
 			}

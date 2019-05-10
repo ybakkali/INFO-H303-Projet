@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 // ID
 	$ready = true;
-	if (empty($_POST["ID"]) || $_POST["ID"] == "0") {
+	if (empty('$_POST["ID"]')) {
 		$IDErr = "ID is required";
 		$ready = false;
 	}
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 
 //Password
-	if (empty($_POST["password"])) {
+	if (empty('$_POST["password"]')) {
 			$passwordErr = "Password is required";
 			$ready = false;
 	}

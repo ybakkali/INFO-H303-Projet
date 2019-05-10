@@ -12,6 +12,8 @@
 			<span class="w3-large">Become the coolest of your friends!</span>
 			<p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p>
 		</div>
+		<br><br><br><br><br><br>
+		<a href = "mechanic-login.php"><h5 style = "position:relative; bottom: 0;">Mech Login<h5></a>
 	</header>
 </body>
 </html>

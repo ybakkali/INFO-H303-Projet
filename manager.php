@@ -37,11 +37,13 @@ function userAuthentication($uid, $pass) {
 
 
 function mecAuthentication($mid, $pass) {
-  $mec_login_rq = "SELECT `mechanicID`, `password`
+  $mec_login_req = "SELECT `mechanicID`, `password`
                     FROM  `MECANICIENS`
                     WHERE `mechanicID`=$mid AND `password`=$pass";
   $result = mysqli_query($GLOBALS['link'], $mec_login_req);
   if (mysqli_num_rows($result) > 0) {
+        $_SESSION["ID"] = $mid;
+        $_SESSION["type"] = "mechanic";
         return true;
   }
   else {
@@ -148,6 +150,23 @@ function getScooterInfo($sid) { // consulter les informations associées à chaq
     return $data;
 }
 
+function getAllScootersInfo() { // consulter les informations associées à toutes les trottinettes.
+    $info_req = "SELECT * FROM `SCOOTERS`";
+    $result = mysqli_query($GLOBALS['link'], $info_req);
+    $items = array();
+    $count = 0;
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $items[$count] = ($row);
+            $count++;
+            //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+        }
+    }
+    else {
+        echo "Didn't find any results.\n";
+    }
+    return $items;
+}
 
 function getScooterComplains($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
     $complain_req = "SELECT `userID`, `date`, `description`
