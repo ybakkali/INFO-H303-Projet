@@ -218,7 +218,7 @@ function userTripsHistory($uid) { //consulter l'historique des déplacement effe
     $history_req = "SELECT *
                     FROM `TRIPS`
                     WHERE `userID` = $uid
-                    ORDER BY `endtime`";
+                    ORDER BY `endtime` DESC";
 
     $result = $GLOBALS['link']->query($history_req);
 
