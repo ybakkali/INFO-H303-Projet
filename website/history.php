@@ -60,8 +60,18 @@
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 		subdomains: ['a', 'b', 'c']
 		}).addTo(map);
-    var sourceMarker = L.marker([0,0]).addTo(map);
-    var destinationMarker = L.marker([0,0]).addTo(map);
+		var start = L.icon({
+			iconUrl: "images/marker-yellow.png",
+			iconSize: [40,40],
+			iconAnchor: [20,40]
+		});
+		var finish = L.icon({
+			iconUrl: "images/marker-green.png",
+			iconSize: [40,40],
+			iconAnchor: [20,40]
+		});
+    var sourceMarker = L.marker([0,0],{icon:start}).addTo(map);
+    var destinationMarker = L.marker([0,0],{icon:finish}).addTo(map);
     var path = L.polyline([[0,0],[0,0]],{color: 'red'}).addTo(map);
 
     function showOnMap(sourceX,sourceY,destinationX,destinationY) {

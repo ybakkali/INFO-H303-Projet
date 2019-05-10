@@ -20,7 +20,7 @@
 
 	<form action="trottinette.php" method="GET">
 
-		<input type="text" name="ID" placeholder="Enter Scooter ID" value="<?php if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) echo $_GET["ID"] ?>">
+		<input type="text" name="ID" placeholder="Enter Scooter ID" value="<?php if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) echo $_GET["ID"] ?>" required>
 		<input type="submit" value="Search">
 	</form>
 

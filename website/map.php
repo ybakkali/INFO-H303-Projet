@@ -19,7 +19,17 @@
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 	subdomains: ['a', 'b', 'c']
 	}).addTo(map);
-	var userMarker = L.marker([0,0]).addTo(map);
+	var user = L.icon({
+		iconUrl: "images/marker-red.png",
+		iconSize: [40,40],
+		iconAnchor: [20,40]
+	});
+	var scooter = L.icon({
+		iconUrl: "images/marker-blue.png",
+		iconSize: [40,40],
+		iconAnchor: [20,40]
+	});
+	var userMarker = L.marker([0,0],{icon:user}).addTo(map);
 	if (navigator.geolocation)
 	    navigator.geolocation.watchPosition(updateUserMarker);
 
@@ -32,7 +42,7 @@
 		$result = AveScooterPos();
 		echo "<script>";
 		foreach ($result as $scooter) {
-				echo 'var marker = L.marker(['.$scooter['locationX'].', '.$scooter['locationY'].']).addTo(map);
+				echo 'var marker = L.marker(['.$scooter['locationX'].', '.$scooter['locationY'].'],{icon:scooter}).addTo(map);
 							marker.bindPopup("<p style = \"text-align: center\"><a href = \"trottinette.php?ID='.$scooter['scooterID'].'\">'.$scooter['scooterID'].'</a></p>");';
 		}
 		echo "</script>";
