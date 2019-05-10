@@ -2,15 +2,23 @@
 <body>
 	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
 	<title> DataBase Project - Complaint </title>
-	<?php include("global.php");
-				session_start();
-				include("header.php");
-				if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) echo "<script>window.location = 'home.php';</script>";
+	<?php
+		include("global.php");
+		session_start();
+		include("header.php");
+		if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) echo "<script>window.location = 'home.php';</script>";
 	?>
+
+	<?php
+		$scooters = array();
+
+	?>
+
+
 	<h1 style="padding:100px">Complaint</h1>
 	<div style = "position:relative; top:-75px">
 
-	</div>
 
+	</div>
 </body>
 </html>
