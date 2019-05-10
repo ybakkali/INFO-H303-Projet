@@ -1,21 +1,28 @@
-<html>
-<body>
-	<head><link rel="stylesheet" type="text/css" href="style.css"></head>
-	<title> DataBase Project - Menu </title>
-	<?php include("global.php");
-				session_start();
-				include("header.php");
-				if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
-	?>
-	<h1 style="padding:100px">Menu</h1>
-	<div style = "position:relative; top:-75px">
-		<a href="map.php"><h2>Check the available scooters</h2></a>
-		<a href="trottinette.php"><h2>Search a specific scooter</h2></a>
-		<a href="history.php"><h2>Check your trips history</h2></a>
-	<?php
-		if ($_SESSION["type"] != "unregistered") echo '<a href="menu.php"><h2>Take, recharge and bring back a scooter</h2></a>';
-	?>
-	</div>
+<!DOCTYPE html>
+<?php
+	include("global.php");
+	include("../manager.php");
+	if (!isloggedIn()) {
+		echo "<script>window.location = 'home.php';</script>";
+		exit();
+	}
+?>
 
-</body>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>DataBase Project - Menu</title>
+	</head>
+	<body>
+		<?php include("header.html")?>
+		<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+			<div class="w3-display-middle w3-text-white w3-xxlarge title">
+				<h1 class="w3-jumbo">Menu</h1>
+				<a href="map.php" class="w3-button">Check the available scooters</a><br>
+				<a href="trottinette.php" class="w3-button">Search a specific scooter</a><br>
+				<a href="history.php" class="w3-button">Check your trips history</a>
+				<?php //if ($_SESSION["type"] != "unregistered") echo "<input type=\"submit\" value=\"Check your trips history\" onclick=\"window.location='history.php';\">" ?>
+			</div>
+		</header>
+	</body>
 </html>
