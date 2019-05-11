@@ -369,6 +369,55 @@ function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZ
           }
 }
 
+
+function getAllUsersInfo() {
+    $req1 = "SELECT u.`ID`, u.`lastname`, u.`firstname`, u.`phone`, u.`bankaccount`, a.`city`, a.`cp`, a.`street`, a.`number`
+            FROM `ALL_USERS` u, `USER_ADDRESS` a
+            WHERE u.`ID` = a.`ID`";
+
+    $result = $GLOBALS['link']->query($req1);
+
+    $items = array();
+    $count = 0;
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $items[$count] = ($row);
+            $count++;
+            //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+        }
+        //print_r($items);
+    }
+    else {
+        echo "Didn't find any results.\n";
+    }
+
+    $req2 = "SELECT u.`ID`, u.`bankaccount`
+             FROM `ALL_USERS` u
+             WHERE u.`lastname` IS NULL";
+
+    $result2 = $GLOBALS['link']->query($req2);
+
+    if ($result2->num_rows > 0) {
+        while($row2 = $result2->fetch_assoc()) {
+            $items[$count] = ($row2);
+            $count++;
+            //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+        }
+        print_r($items);
+    }
+    else {
+        echo "Didn't find any results.\n";
+    }
+
+
+    return $items;
+}
+
+
+
+
+getAllUsersInfo();
 /*
 $d = new DateTime('2017-01-01T19:40:36');
 addNote(574,1000274,78849393673150838933, $d, "ok");*/
