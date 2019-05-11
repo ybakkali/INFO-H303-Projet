@@ -227,15 +227,15 @@ if ($charger == "No") echo"<style> #conditional_part {display:none;} </style>";
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
 					<label>Bank Account</label><br>
-					<input type="text" name="bankAccount" value="<?php echo $bankAccount?>" required><br>
+					<input type="text" name="bankAccount" placeholder="Enter Bank Account" value="<?php echo $bankAccount?>" required><br>
 					<p class="w3-text-red"><?php echo $bankAccountErr;?></p>
 
 					<label>Password</label><br>
-					<input type="password" name="password" required><br>
+					<input type="password" name="password" placeholder="Enter Password" required><br>
 					<p class="w3-text-red"><?php echo $passwordErr;?></p>
 
 					<label>Verify Password</label><br>
-					<input type="password" name="passwordVerif" required><br>
+					<input type="password" name="passwordVerif" placeholder="Enter Password Again" required><br>
 					<p class="w3-text-red"><?php echo $passwordVerifErr;?></p>
 
 					<label>Charger? : </label>
@@ -243,34 +243,34 @@ if ($charger == "No") echo"<style> #conditional_part {display:none;} </style>";
 
 					<div id="conditional_part"><br>
 						<label>First Name</label><br>
-						<input type="text" name="firstName" value="<?php echo $firstName;?>"><br>
+						<input type="text" name="firstName" placeholder="Enter First Name" value="<?php echo $firstName;?>"><br>
 						<p class="w3-text-red"><?php echo $firstNameErr;?></p>
 
 						<label>Last Name</label><br>
-						<input type="text" name="lastName" value="<?php echo $lastName;?>"><br>
+						<input type="text" name="lastName" placeholder="Enter Last Name" value="<?php echo $lastName;?>"><br>
 						<p class="w3-text-red"><?php echo $lastNameErr;?></p>
 
 						<label>Phone</label><br>
-						<input type="text" name="phone" value="<?php echo $phone;?>"><br>
+						<input type="text" name="phone" placeholder="Enter Phone Number" value="<?php echo $phone;?>"><br>
 						<p class="w3-text-red"><?php echo $phoneErr;?></p>
 
 						<label>Address</label><br>
 
 						<div class="w3-xlarge">
 							<label>Number</label><br>
-							<input type="text" name="addrNumber" value="<?php echo $addrNumber;?>"><br>
+							<input type="text" name="addrNumber" placeholder="Enter Number" value="<?php echo $addrNumber;?>"><br>
 							<p class="w3-text-red"><?php echo $addrNumberErr;?></p>
 
 							<label>Street</label><br>
-							<input type="text" name="addrStreet" value="<?php echo $addrStreet;?>"><br>
+							<input type="text" name="addrStreet" placeholder="Enter Street" value="<?php echo $addrStreet;?>"><br>
 							<p class="w3-text-red"><?php echo $addrStreetErr;?></p>
 
 							<label>City</label><br>
-							<input type="text" name="addrCity" value="<?php echo $addrCity;?>"><br>
+							<input type="text" name="addrCity" placeholder="Enter City" value="<?php echo $addrCity;?>"><br>
 							<p class="w3-text-red"><?php echo $addrCityErr;?></p>
 
 							<label>Postal Code</label><br>
-							<input type="text" name="addrPostal" value="<?php echo $addrPostal;?>"><br>
+							<input type="text" name="addrPostal" placeholder="Enter Postal Code" value="<?php echo $addrPostal;?>"><br>
 							<p class="w3-text-red"><?php echo $addrPostalErr;?></p>
 						</div>
 					</div>

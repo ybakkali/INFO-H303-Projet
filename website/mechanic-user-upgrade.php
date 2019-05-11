@@ -167,34 +167,34 @@
           <p class="w3-text-red"><?php echo $IDErr;?></p>
 
           <label>First Name</label><br>
-          <input type="text" name="firstName" value="<?php echo $firstName;?>" required><br>
+          <input type="text" name="firstName" placeholder="Enter First Name" value="<?php echo $firstName;?>" required><br>
           <p class="w3-text-red"><?php echo $firstNameErr;?></p>
 
           <label>Last Name</label><br>
-          <input type="text" name="lastName" value="<?php echo $lastName;?>" required><br>
+          <input type="text" name="lastName" placeholder="Enter Last Name" value="<?php echo $lastName;?>" required><br>
           <p class="w3-text-red"><?php echo $lastNameErr;?></p>
 
           <label>Phone</label><br>
-          <input type="text" name="phone" value="<?php echo $phone;?>" required><br>
+          <input type="text" name="phone" placeholder="Enter Phone Number" value="<?php echo $phone;?>" required><br>
           <p class="w3-text-red"><?php echo $phoneErr;?></p>
 
           <label>Address</label><br>
 
           <div class="w3-xlarge">
             <label>Number</label><br>
-            <input type="text" name="addrNumber" value="<?php echo $addrNumber;?>" required><br>
+            <input type="text" name="addrNumber" placeholder="Enter Number" value="<?php echo $addrNumber;?>" required><br>
             <p class="w3-text-red"><?php echo $addrNumberErr;?></p>
 
             <label>Street</label><br>
-            <input type="text" name="addrStreet" value="<?php echo $addrStreet;?>" required><br>
+            <input type="text" name="addrStreet" placeholder="Enter Street" value="<?php echo $addrStreet;?>" required><br>
             <p class="w3-text-red"><?php echo $addrStreetErr;?></p>
 
             <label>City</label><br>
-            <input type="text" name="addrCity" value="<?php echo $addrCity;?>" required><br>
+            <input type="text" name="addrCity" placeholder="Enter City" value="<?php echo $addrCity;?>" required><br>
             <p class="w3-text-red"><?php echo $addrCityErr;?></p>
 
             <label>Postal Code</label><br>
-            <input type="text" name="addrPostal" value="<?php echo $addrPostal;?>" required><br>
+            <input type="text" name="addrPostal" placeholder="Enter Postal Code" value="<?php echo $addrPostal;?>" required><br>
             <p class="w3-text-red"><?php echo $addrPostalErr;?></p>
           </div>
           <input type="submit" name="submit" value="Submit">
