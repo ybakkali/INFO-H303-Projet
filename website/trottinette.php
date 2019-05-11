@@ -21,12 +21,13 @@
 		<title> DataBase Project - Trottinette </title>
 		<style>
 		#scrolltable { margin-top: 80px; height: 30%; overflow: auto; max-height: 200px}
-		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
+		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
-		#scrolltable th div { position: absolute; margin-top: -25px; }
-		.c1 {width: 1px;}
-		.c2 {width: 30px;}
-		.c3 {width: 160px;text-align: left;}
+		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
+		.c1 {width: 10px;}
+		.c2 {width: 60px;}
+		.c3 {width: 60px;}
+		.c4 {width: 100px;text-align: left;}
 		.grey {background-color: rgba(128,128,128,.25);}
 		.red {background-color: rgba(255,0,0,.25);}
 		</style>
@@ -43,7 +44,10 @@
 		<?php
 			if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 				$informations = getScooterInfo($_GET["ID"]);
-				$complaints = getScooterComplains($_GET["ID"]);
+				if (isset($_GET["sortBy"]) && !empty('$_GET["sortBy"]'))
+					$complaints = getScooterComplains($_GET["ID"],$_GET["sortBy"]);
+				else
+					$complaints = getScooterComplains($_GET["ID"],'date');
 			}
 
 			else exit();
@@ -95,9 +99,10 @@
 						<table>
 							<thead>
 								  <tr>
-								  <th><div>Date</div></th>
-								  <th><div>Introduced by</div></th>
-								  <th><div>Description</div></th>
+									  <th onclick="window.location = 'trottinette.php?ID=<?php echo $_GET["ID"]?>&sortBy=date'"><div>Date</div></th>
+									  <th onclick="window.location = 'trottinette.php?ID=<?php echo $_GET["ID"]?>&sortBy=userID'"><div>By</div></th>
+									  <th onclick="window.location = 'trottinette.php?ID=<?php echo $_GET["ID"]?>&sortBy=state'"><div>State</div></th>
+									  <th onclick="window.location = 'trottinette.php?ID=<?php echo $_GET["ID"]?>&sortBy=description'"><div>Description</div></th>
 								  </tr>
 							</thead>
 							<tbody>
@@ -106,7 +111,8 @@
 										echo "  <tr>
 												<th class = 'c1'>".$complaint["date"]."</th>
 												<th class = 'c2'>".$complaint["userID"]."</th>
-												<th class = 'c3'>".$complaint["description"]."</th>
+												<th class = 'c3'>".$complaint["state"]."</th>
+												<th class = 'c4'>".$complaint["description"]."</th>
 											    </tr>";
 								}
 								?>

@@ -21,7 +21,7 @@
 		.c2 {width: 130px;}
 		.c3 {width: 150px;}
 		.c4 {width: 30px;}
-		.c4 {width: 100px;}
+		.c5 {width: 600px;}
 		</style>
 	</head>
 	<body>
@@ -40,6 +40,7 @@
 					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=userID'"><div>Introduced by</div></th>
 					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=state'"><div>State</div></th>
 					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=description'"><div>Description</div></th>
+					  <th></th>
 					  </tr>
 				</thead>
 				<tbody>
@@ -58,6 +59,7 @@
 									<th class = 'c3'>".$complaint["userID"]."</th>
 									<th class = 'c4'>".$complaint["state"]."</th>
 									<th class = 'c5'>".$complaint["description"]."</th>
+									<th><a href='mechanic-menu.php'><button id='bar' type='submit'><img src='pencil-edit-button.png'/></button></a></th>
 									</tr>";
 						}
 					}
