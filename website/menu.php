@@ -20,7 +20,7 @@
 				<h1 class="w3-jumbo">Menu</h1>
 				<a href="map.php" class="w3-button">Check the available scooters</a><br>
 				<a href="trottinette.php" class="w3-button">Search a specific scooter</a><br>
-				<a href="history.php" class="w3-button">Check your trips history</a>
+				<a href="history.php?sortBy=starttime" class="w3-button">Check your trips history</a>
 				<?php //if ($_SESSION["type"] != "unregistered") echo "<input type=\"submit\" value=\"Check your trips history\" onclick=\"window.location='history.php';\">" ?>
 			</div>
 		</header>

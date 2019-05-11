@@ -13,7 +13,7 @@
 		#scrolltable {margin-left: 10px; margin-top: 80px; height: 500px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
-		#scrolltable th div { position: absolute; margin-top: -25px; }
+		#scrolltable th div { position: absolute; margin-top: -25px;cursor: pointer; }
 		.c1 {width: 200px;}
 		.c2 {width: 200px;}
 		.c3 {width: 200px;}
@@ -34,16 +34,16 @@
 		<table>
 			<thead>
 	        <tr>
-	          <th><div>Scooter ID</div></th>
-	          <th><div>Time</div></th>
-	          <th><div>Duration</div></th>
-	          <th><div>Price</div></th>
+	          <th onclick="window.location = 'history.php?sortBy=scooterID'"><div>Scooter ID</div></th>
+	          <th onclick="window.location = 'history.php?sortBy=starttime'"><div>Time</div></th>
+	          <th onclick="window.location = 'history.php?sortBy=duration'"><div>Duration</div></th>
+	          <th onclick="window.location = 'history.php?sortBy=price'"><div>Price</div></th>
 	          <th><div></div></th>
 	        </tr>
 			</thead>
 			<tbody>
 	        <?php
-	        $trips = userTripsHistory($_SESSION["ID"]);
+	        $trips = userTripsHistory($_SESSION["ID"],$_GET["sortBy"]);
 	        foreach ($trips as $trip) {
 	            echo "<tr>
 	                  <td class = 'c1'><a href='trottinette.php?ID=".$trip["scooterID"]."'>".$trip["scooterID"]."</a></td>

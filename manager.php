@@ -215,11 +215,11 @@ function complainScooter($scooter_id, $user_id, $cmpln_text) { //introduire une 
 }
 
 
-function userTripsHistory($uid) { //consulter l'historique des déplacement effectués
+function userTripsHistory($uid,$sortBy) { //consulter l'historique des déplacement effectués
     $history_req = "SELECT *
                     FROM `TRIPS`
                     WHERE `userID` = $uid
-                    ORDER BY `endtime` DESC";
+                    ORDER BY $sortBy DESC";
 
     $result = $GLOBALS['link']->query($history_req);
 
