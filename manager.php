@@ -406,10 +406,6 @@ function getAllUsersInfo() {
     return $items;
 }
 
-
-
-
-getAllUsersInfo();
 /*
 $d = new DateTime('2017-01-01T19:40:36');
 addNote(574,1000274,78849393673150838933, $d, "ok");*/
