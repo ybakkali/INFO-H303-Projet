@@ -20,7 +20,7 @@
 				<h1 class="w3-jumbo">Menu</h1>
 				<a href="mechanic-scooter.php?sortBy=totalComplains" class="w3-button">Manage scooters</a><br>
 				<a href="mechanic-complaints.php" class="w3-button">Manage complaints</a><br>
-				<a href="mechanic-user.php" class="w3-button">Manage users</a><br>
+				<a href="mechanic-users.php" class="w3-button">Manage users</a><br>
 				<a href="mechanic-request.php" class="w3-button">Show request</a>
 			</div>
 		</header>
