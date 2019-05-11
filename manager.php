@@ -353,12 +353,15 @@ function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZ
                           WHERE `ID` = $uid";
           if (!(mysqli_query($GLOBALS['link'], $update_user))) {
               echo "Error : (could not insert new data !) : " . $update_user . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+              return false;
           }
           $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
                           VALUES ($new_id, '$adrsCity', $adrsZip, '$adrsStreet', $adrsNumber)";
           if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
               echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+              return false;
           }
+          return true;
 }
 
 

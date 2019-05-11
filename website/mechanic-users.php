@@ -43,7 +43,7 @@
 								echo 	" <td></td>
 												<td></td>
 												<td></td>
-												<td>Upgrade</td>
+												<td><button onclick='window.location=\"mechanic-user-upgrade.php?ID=".$user["ID"]."\"';>Upgrade</button></td>
 												<td></td>";
 							}
 							echo 		"</tr>";
