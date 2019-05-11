@@ -6,7 +6,7 @@
 		#scrolltable { margin-top: 80px; height: 500px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
-		#scrolltable th div { position: absolute; margin-top: -25px; }
+		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
 		.c1 {width: 87px;}
 		.c2 {width: 170px;}
 		.c3 {width: 120px;}

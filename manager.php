@@ -396,7 +396,7 @@ function getAllUsersInfo() {
             $count++;
             //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
         }
-        print_r($items);
+
     }
     else {
         echo "Didn't find any results.\n";
