@@ -151,8 +151,15 @@ function getScooterInfo($sid) { // consulter les informations associées à chaq
     return $data;
 }
 
-function getAllScootersInfo() { // consulter les informations associées à toutes les trottinettes.
-    $info_req = "SELECT * FROM `SCOOTERS`";
+function getAllScootersInfo($sortBy) { // consulter les informations associées à toutes les trottinettes.
+    $info_req = "SELECT `scooterID`,`commissioningDate`,`modelNumber`,`totalComplains`,`batteryLevel`,`locationX`,`locationY`,`lastLocationTime`,`availability`
+                 FROM `SCOOTERS`
+                 LEFT JOIN (SELECT `scooterID`,count(*) AS `totalComplains`
+                            FROM `COMPLAINS`
+                            WHERE `state` = 'notTreated'
+                            GROUP BY `scooterID`) computeComplains
+                            USING (scooterID)
+                 ORDER BY $sortBy DESC";
     $result = mysqli_query($GLOBALS['link'], $info_req);
     $items = array();
     $count = 0;
@@ -167,21 +174,6 @@ function getAllScootersInfo() { // consulter les informations associées à tout
         echo "Didn't find any results.\n";
     }
     return $items;
-}
-
-function getComplainsNumber($sid) {
-    $complain_req = "SELECT count(*) AS `Total`
-                     FROM `COMPLAINS`
-                     WHERE `state` = 'notTreated'
-                     GROUP BY `scooterID`
-                     HAVING `scooterID` = $sid";
-    $result = mysqli_query($GLOBALS['link'], $complain_req);
-    if (mysqli_num_rows($result) > 0) {
-            $data = mysqli_fetch_assoc($result);
-            return $data["Total"];
-    } else {
-      return 0;
-    }
 }
 
 function getScooterComplains($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.

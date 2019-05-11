@@ -60,31 +60,33 @@
 	    <table>
 			<thead>
 				<tr>
-		        <th><div>Scooter ID</div></th>
-		        <th><div>Commissioning Date</div></th>
-		        <th><div>Model Number</div></th>
-		        <th><div>Complains</div></th>
-		        <th><div>Battery Level</div></th>
-		        <th><div>Location</div></th>
-		        <th><div>Last Time Used</div></th>
-		        <th><div>Availability</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=scooterID'"><div>Scooter ID</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=commissioningDate'"><div>Commissioning Date</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=modelNumber'"><div>Model Number</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=totalComplains'"><div>Complains</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=batteryLevel'"><div>Battery Level</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=locationX'"><div>Location</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=lastLocationTime'"><div>Last Time Used</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=availability'"><div>Availability</div></th>
 		        <th coldiv="3"><div>Options</div></th>
 			    </tr>
 			</thead>
 			<tbody>
 				<tr>
 				<?php
-				$scooters = getAllScootersInfo();
+				$scooters = getAllScootersInfo($_GET["sortBy"]);
 				foreach ($scooters as $scooter) {
-							$totalComplains = getComplainsNumber($scooter["scooterID"]);
+					$complains = ($scooter["totalComplains"] != NULL) ? $scooter["totalComplains"] : 0;
+					$location = ($scooter["locationX"] != NULL) ? $scooter["locationX"]." ".$scooter["locationY"] : "unknown";
+					$time = ($scooter["lastLocationTime"] != NULL) ? $scooter["lastLocationTime"] : "unknown";
 				  echo "<tr>
 				        <td class='c1'>".$scooter["scooterID"]."</td>
 				        <td class='c2'>".$scooter["commissioningDate"]."</td>
 				        <td class='c3'>".$scooter["modelNumber"]."</td>
-				        <td class='c4'>".$totalComplains."</td>
+				        <td class='c4'>".$complains."</td>
 				        <td class='c5'>".$scooter["batteryLevel"]."</td>
-				        <td class='c6'>".$scooter["locationX"].", ".$scooter["locationY"]."</td>
-				        <td class='c7'>".$scooter["lastLocationTime"]."</td>
+				        <td class='c6'>".$location."</td>
+				        <td class='c7'>".$time."</td>
 				        <td class='c8'>".$scooter["availability"]."</td>
 				        <td><button onclick='deleteScooter(".$scooter["scooterID"].")'>Delete</button></td>
 										<td><button onclick='repairScooter(".$scooter["scooterID"].")'>Repair</button></td>
