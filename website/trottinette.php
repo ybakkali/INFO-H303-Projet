@@ -1,8 +1,23 @@
 <!DOCTYPE html>
+<?php
+	include("global.php");
+	include("../manager.php");
+	if (!isloggedIn()) {
+		echo "<script>window.location = 'home.php';</script>";
+		exit();
+	}
+?>
+
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+		integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+		crossorigin=""></script>
 		<title> DataBase Project - Trottinette </title>
 		<style>
 		#scrolltable { margin-top: 80px; height: 30%; overflow: auto; max-height: 200px}
@@ -17,22 +32,7 @@
 		</style>
 	</head>
 	<body>
-
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-		integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-		crossorigin=""/>
-		<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-		crossorigin=""></script>
-
-		<?php include("global.php");
-					session_start();
-					include("header.php");
-					include("../manager.php");
-					if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
-					?>
-
-		<br><br><br>
+		<?php include("header.html")?>
 
 		<form action="trottinette.php" method="GET">
 
