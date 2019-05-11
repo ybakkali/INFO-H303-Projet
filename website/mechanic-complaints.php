@@ -12,37 +12,55 @@
 	<head>
 		<meta charset="utf-8">
 		<title>DataBase Project - Complaints</title>
+		<style>
+		#scrolltable {margin-left: 5px; margin-top: 35px; height: 430px; overflow: auto; }
+		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
+		#scrolltable tr:nth-child(even) { background: #EEE; }
+		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
+		.c1 {width: 40px;}
+		.c2 {width: 10px;}
+		.c3 {width: 1px;}
+		.c4 {width: 190px;}
+		</style>
 	</head>
 	<body>
 		<?php include("header.html")?>
-		<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-			<div class="w3-display-middle w3-text-white w3-xxlarge title">
-				<h1 class="w3-jumbo">Complaints</h1>
-				<form action="mechanic-complaints.php" method="GET">
-					<input type="text" name="ID" placeholder="Enter Scooter ID" value="<?php if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) echo $_GET["ID"] ?>" required>
-					<input type="submit" value="Search">
-				</form>
-				<br>
-				<table class="w3-table w3-auto w3-centered w3-responsive">
-					<tr>
-						<th>User ID</th>
-						<th>Date</th>
-						<th>Description</th>
-					</tr>
-					<?php
-						if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
-							$complains = getScooterComplains($_GET["ID"]);
-							foreach ($complains as $complain) {
-								echo "<tr>
-												<td>".$complain["userID"]."</td>
-												<td>".$complain["date"]."</td>
-												<td>".$complain["description"]."</td>
-											</tr>";
-							}
+		<h1>C</h1>
+		<form action="mechanic-complaints.php" method="GET">
+			<input type="text" name="scooterID" placeholder="Enter Scooter ID" value="<?php if (isset($_GET["scooterID"]) && !empty('$_GET["scooterID"]')) echo $_GET["scooterID"] ?>" required>
+			<input type="submit" value="Search">
+		</form>
+		<div id="scrolltable">
+			<table>
+				<thead>
+					  <tr>
+					  <th><div>Complaint N°</div></th>
+					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=date'"><div>Date</div></th>
+					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=userID'"><div>Introduced by</div></th>
+					  <th onclick="window.location = 'mechanic-complaints.php?scooterID=<?php echo $_GET["scooterID"]?>&sortBy=description'"><div>Description</div></th>
+					  </tr>
+				</thead>
+				<tbody>
+				<?php
+					if (isset($_GET["scooterID"]) && !empty('$_GET["scooterID"]')) {
+						if (isset($_GET["sortBy"]) && !empty('$_GET["sortBy"]'))
+							$complaints = getScooterComplains($_GET["scooterID"],$_GET["sortBy"]);
+						else
+						    $complaints = getScooterComplains($_GET["scooterID"],'date');
+						$it = 0;
+						foreach ($complaints as $complaint) {
+							$it++;
+							echo "  <tr>
+									<th class = 'c1'>".$it."</th>
+									<th class = 'c2'>".$complaint["date"]."</th>
+									<th class = 'c3'>".$complaint["userID"]."</th>
+									<th class = 'c4'>".$complaint["description"]."</th>
+									</tr>";
 						}
-					?>
-				</table>
-			</div>
-		</header>
+					}
+				?>
+			</tbody>
+		</table>
+	</div>
 	</body>
 </html>

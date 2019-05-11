@@ -43,7 +43,7 @@
 		<?php
 			if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 				$informations = getScooterInfo($_GET["ID"]);
-				$complains = getScooterComplains($_GET["ID"]);
+				$complaints = getScooterComplains($_GET["ID"]);
 			}
 
 			else exit();
@@ -90,7 +90,7 @@
 
 			<div class = "w3-half">
 
-				<h2>Complains</h2>
+				<h2>Complaints</h2>
 					<div id="scrolltable">
 						<table>
 							<thead>
@@ -102,11 +102,11 @@
 							</thead>
 							<tbody>
 								<?php
-								foreach ($complains as $complain) {
+								foreach ($complaints as $complaint) {
 										echo "  <tr>
-												<th class = 'c1'>".$complain["date"]."</th>
-												<th class = 'c2'>".$complain["userID"]."</th>
-												<th class = 'c3'>".$complain["description"]."</th>
+												<th class = 'c1'>".$complaint["date"]."</th>
+												<th class = 'c2'>".$complaint["userID"]."</th>
+												<th class = 'c3'>".$complaint["description"]."</th>
 											    </tr>";
 								}
 								?>
@@ -114,7 +114,7 @@
 						</table>
 					</div>
 				<br>
-				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><input type="submit" value="Add a new complain"></a>
+				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><input type="submit" value="Add a new complaint"></a>
 			</div>
 		</div>
 		<br><br>

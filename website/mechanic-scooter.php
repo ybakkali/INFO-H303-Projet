@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<style>
-		#scrolltable { margin-top: 80px; height: 500px; overflow: auto; }
+		#scrolltable { margin-top: 35px; height: 500px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
@@ -42,17 +42,17 @@
 		//window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
 		function deleteScooter(id) {
 			if (confirm("Do you really want to delete the scooter "+id+" ?"))
-				window.location = "mechanic-scooter.php?ID="+id +"&delete=true&sortBy=totalComplains";
+				window.location = "mechanic-scooter.php?ID="+id +"&delete=true&sortBy=totalComplaints";
 		}
 
 		function repairScooter(id) {
 			if (confirm("Do you really want to repair the scooter "+id+" ?"))
-				window.location = "mechanic-scooter.php?ID="+id +"&repair=true&sortBy=totalComplains";
+				window.location = "mechanic-scooter.php?ID="+id +"&repair=true&sortBy=totalComplaints";
 		}
 
 		function fixScooter(id) {
 			if (confirm("Is the scooter "+id+" really repaired?"))
-				window.location = "mechanic-scooter.php?ID="+id +"&fix=true&sortBy=totalComplains";
+				window.location = "mechanic-scooter.php?ID="+id +"&fix=true&sortBy=totalComplaints";
 		}
 		</script>
 
@@ -63,7 +63,7 @@
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=scooterID'"><div>Scooter ID</div></th>
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=commissioningDate'"><div>Commissioning Date</div></th>
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=modelNumber'"><div>Model Number</div></th>
-		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=totalComplains'"><div>Complains</div></th>
+		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=totalComplaints'"><div>Complaints</div></th>
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=batteryLevel'"><div>Battery Level</div></th>
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=locationX'"><div>Location</div></th>
 		        <th onclick="window.location = 'mechanic-scooter.php?sortBy=lastLocationTime'"><div>Last Time Used</div></th>
@@ -76,14 +76,14 @@
 				<?php
 				$scooters = getAllScootersInfo($_GET["sortBy"]);
 				foreach ($scooters as $scooter) {
-					$complains = ($scooter["totalComplains"] != NULL) ? $scooter["totalComplains"] : 0;
+					$complaints = ($scooter["totalComplaints"] != NULL) ? $scooter["totalComplaints"] : 0;
 					$location = ($scooter["locationX"] != NULL) ? $scooter["locationX"]." ".$scooter["locationY"] : "unknown";
 					$time = ($scooter["lastLocationTime"] != NULL) ? $scooter["lastLocationTime"] : "unknown";
 				  echo "<tr>
 				        <td class='c1'>".$scooter["scooterID"]."</td>
 				        <td class='c2'>".$scooter["commissioningDate"]."</td>
 				        <td class='c3'>".$scooter["modelNumber"]."</td>
-				        <td class='c4'>".$complains."</td>
+				        <td class='c4'>".$complaints."</td>
 				        <td class='c5'>".$scooter["batteryLevel"]."</td>
 				        <td class='c6'>".$location."</td>
 				        <td class='c7'>".$time."</td>

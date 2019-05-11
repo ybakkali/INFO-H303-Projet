@@ -152,10 +152,10 @@ function getScooterInfo($sid) { // consulter les informations associées à chaq
 }
 
 function getAllScootersInfo($sortBy) { // consulter les informations associées à toutes les trottinettes.
-    $info_req = "SELECT `scooterID`,`commissioningDate`,`modelNumber`,`totalComplains`,`batteryLevel`,`locationX`,`locationY`,`lastLocationTime`,`availability`
+    $info_req = "SELECT `scooterID`,`commissioningDate`,`modelNumber`,`totalComplaints`,`batteryLevel`,`locationX`,`locationY`,`lastLocationTime`,`availability`
                  FROM `SCOOTERS`
-                 LEFT JOIN (SELECT `scooterID`,count(*) AS `totalComplains`
-                            FROM `COMPLAINS`
+                 LEFT JOIN (SELECT `scooterID`,count(*) AS `totalComplaints`
+                            FROM `COMPLAINTS`
                             WHERE `state` = 'notTreated'
                             GROUP BY `scooterID`) computeComplains
                             USING (scooterID)
@@ -176,11 +176,11 @@ function getAllScootersInfo($sortBy) { // consulter les informations associées 
     return $items;
 }
 
-function getScooterComplains($sid){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
+function getScooterComplains($sid,$sortBy){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
     $complain_req = "SELECT `userID`, `date`, `description`
-                     FROM `COMPLAINS`
+                     FROM `COMPLAINTS`
                      WHERE `scooterID` = $sid
-                     ORDER BY `date` DESC";
+                     ORDER BY $sortBy DESC";
     $items = array();
     $count = 0;
     $result = mysqli_query($GLOBALS['link'], $complain_req);
@@ -199,7 +199,7 @@ function getScooterComplains($sid){ // consulter les informations associées à 
 
 
 function complainScooter($scooter_id, $user_id, $cmpln_text) { //introduire une plainte (demande d'intervention) au sujet d'une trottinette
-  $adding = "INSERT INTO `COMPLAINS` (scooterID, userID, description)
+  $adding = "INSERT INTO `COMPLAINTS` (scooterID, userID, description)
              VALUES ($scooter_id, $user_id, '$cmpln_text')";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
@@ -308,7 +308,7 @@ function verifyingComplaint($uid, $sid, $date) { //gérer, traiter et clôturer 
 
 
 function updateComplaintState($uid, $sid, $date, $new_state) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
-  $update_status = "UPDATE `COMPLAINS`
+  $update_status = "UPDATE `COMPLAINTS`
                     SET `state` = '$new_state'
                     WHERE `scooterID` = $sid AND `userID` = $uid AND `date` = $date";
   if (!(mysqli_query($GLOBALS['link'], $update_state))) {
