@@ -83,7 +83,7 @@
 				        <td class='c1'>".$scooter["scooterID"]."</td>
 				        <td class='c2'>".$scooter["commissioningDate"]."</td>
 				        <td class='c3'>".$scooter["modelNumber"]."</td>
-				        <td class='c4'>".$complaints."</td>
+				        <td class='c4'><a href='mechanic-complaints.php?scooterID=".$scooter["scooterID"]."&sortBy=date'>".$complaints."</a></td>
 				        <td class='c5'>".$scooter["batteryLevel"]."</td>
 				        <td class='c6'>".$location."</td>
 				        <td class='c7'>".$time."</td>

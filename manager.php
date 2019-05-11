@@ -177,7 +177,7 @@ function getAllScootersInfo($sortBy) { // consulter les informations associées 
 }
 
 function getScooterComplains($sid,$sortBy){ // consulter les informations associées à chaque trottinette: état de la batterie, plaintes actuelles.
-    $complain_req = "SELECT `userID`, `date`, `description`
+    $complain_req = "SELECT `userID`, `date`, `state`,`description`
                      FROM `COMPLAINTS`
                      WHERE `scooterID` = $sid
                      ORDER BY $sortBy DESC";
