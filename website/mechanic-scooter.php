@@ -39,21 +39,21 @@
 		?>
 
 		<script>
-		window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
+		//window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
 		function deleteScooter(id) {
-		  if (confirm("Do you really want to delete the scooter "+id+" ?"))
-		    window.location = "mechanic-scooter.php?ID="+id +"&delete=true";
+			if (confirm("Do you really want to delete the scooter "+id+" ?"))
+				window.location = "mechanic-scooter.php?ID="+id +"&delete=true&sortBy=totalComplains";
 		}
 
-			function repairScooter(id) {
-				if (confirm("Do you really want to repair the scooter "+id+" ?"))
-					window.location = "mechanic-scooter.php?ID="+id +"&repair=true";
-			}
+		function repairScooter(id) {
+			if (confirm("Do you really want to repair the scooter "+id+" ?"))
+				window.location = "mechanic-scooter.php?ID="+id +"&repair=true&sortBy=totalComplains";
+		}
 
-			function fixScooter(id) {
-				if (confirm("Is the scooter "+id+" really repaired?"))
-					window.location = "mechanic-scooter.php?ID="+id +"&fix=true";
-			}
+		function fixScooter(id) {
+			if (confirm("Is the scooter "+id+" really repaired?"))
+				window.location = "mechanic-scooter.php?ID="+id +"&fix=true&sortBy=totalComplains";
+		}
 		</script>
 
 		<div id="scrolltable">
