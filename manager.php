@@ -437,35 +437,42 @@ function getR1() {
 }
 
 
-/*function getR2() {
-  $r2_1 = " CREATE VIEW  INTERSECTION_RELOADS_TRIPS (userID,scooterID) AS
-            SELECT DISTINCT userID, scooterID
-            FROM RELOADS
-            INNER JOIN TRIPS USING (userID,scooterID)";
-
-  $result2_1 = $GLOBALS['link']->query($r2_1);
-
-  $r2_2 = " CREATE VIEW  UNION_RELOADS_AND_INTERSECTION_RELOADS_TRIPS (userID,scooterID) AS
-            SELECT userID,scooterID
-            FROM RELOADS
-            UNION ALL
-            SELECT userID,scooterID
-            FROM INTERSECTION_RELOADS_TRIPS";
-
-  $result2_2 = $GLOBALS['link']->query($r2_2);
-
-  $r2_3 = " CREATE VIEW  DIFFERENCE_RELOADS_AND_INTERSECTION_RELOADS_TRIPS (userID) AS
-            SELECT DISTINCT userID
-            FROM UNION_RELOADS_AND_INTERSECTION_RELOADS_TRIPS
-            GROUP BY userID, scooterID
-            HAVING COUNT(*) = 1";
-
-  $$result2_3 = $GLOBALS['link']->query($r2_3);
-
-  $r2 = " SELECT DISTINCT userID
-          FROM RELOADS
-          WHERE userID NOT IN ( SELECT userID
-                                FROM DIFFERENCE_RELOADS_AND_INTERSECTION_RELOADS_TRIPS)";
+function getR2() {
+  $r2  = "SELECT DISTINCT
+          userID
+      FROM
+          RELOADS
+      WHERE
+          userID NOT IN(
+          SELECT DISTINCT
+              userID
+          FROM
+              (
+              SELECT
+                  userID,
+                  scooterID
+              FROM
+                  RELOADS
+              UNION ALL
+          SELECT
+              userID,
+              scooterID
+          FROM
+              (
+              SELECT DISTINCT
+                  userID,
+                  scooterID
+              FROM
+                  RELOADS
+              INNER JOIN TRIPS USING(userID, scooterID)
+          ) alias1
+          ) alias2
+      GROUP BY
+          userID,
+          scooterID
+      HAVING
+          COUNT(*) = 1
+      )";
 
 
   $result = $GLOBALS['link']->query($r2);
@@ -485,7 +492,7 @@ function getR1() {
   }
   //print_r($items);
   return $items;
-}*/
+}
 
 
 function getR3() {
@@ -531,7 +538,7 @@ function getR4() {
   else {
       //echo "Didn't find any results.\n";
   }
-  print_r($items);
+  //print_r($items);
   return $items;
 }
 
@@ -564,6 +571,7 @@ function getR5() {
   //print_r($items);
   return $items;
 }
+
 
 
 /*
