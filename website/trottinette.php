@@ -226,7 +226,7 @@
 				iconAnchor: [20,40]
 			});
 			var lastMarker = L.marker([<?php echo $informations["locationX"].",".$informations["locationY"]?>],{icon:lastIcon}).addTo(popupmap);
-			var nextMarker = L.marker([<?php echo ($informations["locationX"]-0.001).",".$informations["locationY"]?>],{icon:nextIcon,draggable:true}).addTo(popupmap);
+			var nextMarker = L.marker([<?php echo ($informations["locationX"]-0.001).",".$informations["locationY"]?>],{icon:nextIcon,draggable:true, autoPan:true}).addTo(popupmap);
 			nextMarker.bindPopup("Drag me!").openPopup();
 
 			function windowOnClick(event) {

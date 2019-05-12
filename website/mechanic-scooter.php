@@ -138,7 +138,7 @@
 				iconAnchor: [20,40]
 			});
 
-			var marker = L.marker([50.8499268,4.37],{icon:scooter,draggable:true}).addTo(map);
+			var marker = L.marker([50.8499268,4.37],{icon:scooter,draggable:true, autoPan:true}).addTo(map);
 		</script>
 	</body>
 </html>
