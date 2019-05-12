@@ -270,7 +270,10 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
             AND ((HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7))
             THEN
               signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
-
+        ELSE
+            UPDATE IGNORE `SCOOTERS` S
+            SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime
+            WHERE S.`scooterID` = NEW.scooterID AND NEW.endtime > S.`lastLocationTime`;
         END IF;
     END IF;
   END |
@@ -287,7 +290,11 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
         SET availability = "available"
         WHERE S.`scooterID` = NEW.scooterID;
 
-        IF TIME(NEW.endtime) NOT BETWEEN '22:00:00' and '07:00:00' THEN
+        UPDATE IGNORE `SCOOTERS` S
+        SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime
+        WHERE S.`scooterID` = NEW.scooterID AND NEW.endtime > S.`lastLocationTime`;
+
+        IF (HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7) THEN
             INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price)
             VALUES (NEW.scooterID, NEW.userID, 20);
         END IF;
