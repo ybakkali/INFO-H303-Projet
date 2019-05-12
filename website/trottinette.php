@@ -7,6 +7,7 @@
 		exit();
 	}
 ?>
+<script src="popup.js"></script>
 
 <html lang="en" dir="ltr">
 	<head>
@@ -123,7 +124,7 @@
 			</div>
 			<div class= "w3-row">
 				<a href = "" ><button class="button">Reload it</button></a>
-				<a href = "" ><button class="button">Bring back</button></a>
+				<button class="button" onclick="toggleModal()">Bring back</button>
 				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
 				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
 			</div>
@@ -162,19 +163,53 @@
 					</div>
 			</div>
 		</div>
+		<div class="modal" id="modal">
+			<div class="modal-content">
+				<div id="popupmap" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
+				<br>
+				<button onclick="alert('Position : ' + nextMarker.getLatLng().lat + ', ' + nextMarker.getLatLng().lng)">Done</button>
+			</div>
+		</div>
+
 		<script>
 			var map = L.map('map');
 			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 			subdomains: ['a', 'b', 'c']
 			}).addTo(map);
-		</script>
-		<?php
-			echo "<script>
-					map.setView([".$informations["locationX"].",".$informations["locationY"]."],15);
-					L.marker([".$informations["locationX"].",".$informations["locationY"]."]).addTo(map);
-				</script>";
-		?>
+			map.setView([<?php echo $informations["locationX"].",".$informations["locationY"]?>],15);
 
+			var scooter = L.icon({
+				iconUrl: "images/marker-<?php if ($informations["availability"] == "available") echo "blue";
+																			elseif ($informations["availability"] == "occupy") echo "red";
+																			elseif ($informations["availability"] == "inReload") echo "yellow";
+																			else echo "black";
+																?>.png",
+				iconSize: [40,40],
+				iconAnchor: [20,40]
+			});
+
+			L.marker([<?php echo $informations["locationX"].",".$informations["locationY"]?>],{icon:scooter}).addTo(map);
+		</script>
+		<script>
+			var popupmap = L.map('popupmap').setView([<?php echo $informations["locationX"].",".$informations["locationY"]?>],16);
+			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			subdomains: ['a', 'b', 'c']
+		}).addTo(popupmap);
+			var lastIcon = L.icon({
+				iconUrl: "images/marker-yellow.png",
+				iconSize: [40,40],
+				iconAnchor: [20,40]
+			});
+			var nextIcon = L.icon({
+				iconUrl: "images/marker-blue.png",
+				iconSize: [40,40],
+				iconAnchor: [20,40]
+			});
+			var lastMarker = L.marker([<?php echo $informations["locationX"].",".$informations["locationY"]?>],{icon:lastIcon}).addTo(popupmap);
+			var nextMarker = L.marker([<?php echo ($informations["locationX"]-0.001).",".$informations["locationY"]?>],{icon:nextIcon,draggable:true}).addTo(popupmap);
+			nextMarker.bindPopup("Drag me!").openPopup();
+		</script>
 	</body>
 </html>
