@@ -7,5 +7,3 @@ function windowOnClick(event) {
      toggleModal();
  }
 }
-
-window.addEventListener("click", windowOnClick);
