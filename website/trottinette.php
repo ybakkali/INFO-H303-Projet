@@ -20,7 +20,7 @@
 		crossorigin=""></script>
 		<title> DataBase Project - Trottinette </title>
 		<style>
-		#scrolltable { margin-top: 80px; height: 30%; overflow: auto; max-height: 200px}
+		#scrolltable { margin-top: 80px; height: 30%; overflow: auto; max-height: 260px}
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
@@ -30,6 +30,29 @@
 		.c4 {width: 100px;text-align: left;}
 		.grey {background-color: rgba(128,128,128,.25);}
 		.red {background-color: rgba(255,0,0,.25);}
+		.button {
+		  display: inline-block;
+		  padding: 10px 15px;
+		  font-size: 24px;
+		  cursor: pointer;
+		  text-align: center;
+		  text-decoration: none;
+		  outline: none;
+		  color: #fff;
+		  background-color: #FFA07A;
+		  border: none;
+		  border-radius: 15px;
+		  box-shadow: 0 9px #999;
+		  width: 160px;
+		}
+
+		.button:hover {background-color: #ADD8E6}
+
+		.button:active {
+		  background-color: #3e8e41;
+		  box-shadow: 0 5px #666;
+		  transform: translateY(4px);
+		}
 		</style>
 	</head>
 	<body>
@@ -43,6 +66,8 @@
 
 		<?php
 			if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
+				if (isset($_GET["reserve"]) && !empty('$_GET["reserve"]'))
+					reserveScooter($_GET["ID"]);
 				$informations = getScooterInfo($_GET["ID"]);
 				if (isset($_GET["sortBy"]) && !empty('$_GET["sortBy"]'))
 					$complaints = getScooterComplains($_GET["ID"],$_GET["sortBy"]);
@@ -52,6 +77,13 @@
 
 			else exit();
 		?>
+		<script>
+
+		function reserveScooter(id) {
+			if (confirm("Do you really want to reserve the scooter "+id+" for 3€ ?"))
+				window.location = "trottinette.php?ID="+id +"&reserve=true";
+		}
+		</script>
 		<div class = "w3-row"><br>
 			<div class = "w3-half">
 				<img src="trottinette.jpg" alt="Trottinette">
@@ -82,11 +114,20 @@
 						  <th>Battery Level</th>
 						  <td><?php echo $informations["batteryLevel"]; ?></td>
 						</tr>
+						<tr>
+						  <th>Availability</th>
+						  <td><?php echo $informations["availability"]; ?></td>
+						</tr>
 					  </tbody>
 					</table>
 			</div>
+			<div class= "w3-row">
+				<a href = "" ><button class="button">Reload it</button></a>
+				<a href = "" ><button class="button">Bring back</button></a>
+				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
+				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
+			</div>
 		</div>
-		<br>
 		<div class = "w3-row"><br>
 			<div class = "w3-half">
 				<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; width: 400px; height: 400px; border: 1px solid #AAA;"></div>
@@ -119,12 +160,8 @@
 							</tbody>
 						</table>
 					</div>
-				<br>
-				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><input type="submit" value="Add a new complaint"></a>
 			</div>
 		</div>
-		<br><br>
-
 		<script>
 			var map = L.map('map');
 			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

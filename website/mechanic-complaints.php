@@ -21,7 +21,7 @@
 		.c2 {width: 130px;}
 		.c3 {width: 150px;}
 		.c4 {width: 30px;}
-		.c5 {width: 600px;}
+		.c5 {width: 650px;}
 		</style>
 	</head>
 	<body>
@@ -53,14 +53,18 @@
 						$it = 0;
 						foreach ($complaints as $complaint) {
 							$it++;
+							$sid = $_GET["scooterID"];
+							$date = $complaint["date"];
+							$uid = $complaint["userID"];
 							echo "  <tr>
 									<th class = 'c1'>".$it."</th>
 									<th class = 'c2'>".$complaint["date"]."</th>
 									<th class = 'c3'>".$complaint["userID"]."</th>
 									<th class = 'c4'>".$complaint["state"]."</th>
 									<th class = 'c5'>".$complaint["description"]."</th>
-									<th><a href='mechanic-menu.php'><button id='bar' type='submit'><img src='pencil-edit-button.png'/></button></a></th>
+									<th><a href= 'reparation.php?ID=$sid&userID=$uid&date=$date'><input type='image' src='pencil-edit-button.png' alt='Submit' width='26' height='26'></a></th>
 									</tr>";
+
 						}
 					}
 				?>
