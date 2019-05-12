@@ -138,7 +138,7 @@
       if (convertToRegUser($ID, $lastName, $firstName, $phone, $addrCity, $addrPostal, $addrStreet, $addrNumber)) {
           echo "<script>
               alert('Successful Upgradation')
-              window.location = 'mechanic-user-upgrade.php';
+              window.location = 'mechanic-users.php';
           </script>";
       }
       else {
