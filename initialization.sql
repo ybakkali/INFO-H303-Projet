@@ -124,13 +124,13 @@ CREATE TABLE IF NOT EXISTS `RELOADS`
 ( `scooterID` int unsigned NOT NULL,
   `userID` int unsigned NOT NULL,
   `initialLoad` int unsigned NOT NULL,
-  `finalLoad` int unsigned NOT NULL,
+  `finalLoad` int unsigned NULL ,
   `sourceX` DECIMAL(10, 5) NOT NULL,
   `sourceY` DECIMAL(11, 5) NOT NULL,
-  `destinationX` DECIMAL(10, 5) NOT NULL,
-  `destinationY` DECIMAL(11, 5) NOT NULL,
-  `starttime` DATETIME NOT NULL,
-  `endtime` DATETIME NOT NULL,
+  `destinationX` DECIMAL(10, 5) NULL,
+  `destinationY` DECIMAL(11, 5) NULL,
+  `starttime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `endtime` DATETIME NULL,
 
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter_2 FOREIGN KEY(scooterID)
@@ -192,6 +192,21 @@ CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
       END IF;
   END |
 
+  SELECT '<CREATE EXTRA_PAYMENT TRIGGER>' AS '';
+  CREATE TRIGGER EXTRA_PAYMENT_TRIGGER BEFORE INSERT ON `EXTRA_PAYMENT`
+    FOR EACH ROW
+    BEGIN
+        set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
+
+        IF @var != "occupy" THEN
+            UPDATE `SCOOTERS` S
+            SET availability = "occupy"
+            WHERE S.`scooterID` = NEW.scooterID;
+        ELSE
+            signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+        END IF;
+    END |
+
 SELECT '<CREATE COMPLAINTS TRIGGER>' AS '';
 CREATE TRIGGER COMPLAINS_TRIGGER BEFORE INSERT ON `COMPLAINTS`
   FOR EACH ROW
@@ -205,17 +220,22 @@ SELECT '<CREATE REPARATIONS TRIGGER>' AS '';
 CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
   FOR EACH ROW
   BEGIN
+
     IF NEW.complainTime > NEW.repaireTime THEN
-      signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+        signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+    ELSEIF (HOUR(TIME(NEW.repaireTime)) NOT BETWEEN 22 AND 23)
+            AND (HOUR(TIME(NEW.repaireTime)) NOT BETWEEN 0 AND 7)
+            THEN
+                signal sqlstate '45000'  SET MESSAGE_TEXT = @repair;
     ELSE
-      UPDATE `COMPLAINTS` C
-      SET state = 'treated'
-      WHERE C.`scooterID` = NEW.scooterID AND
+        UPDATE `COMPLAINTS` C
+        SET state = 'treated'
+        WHERE C.`scooterID` = NEW.scooterID AND
             C.`date`      < NEW.repaireTime;
 
-      UPDATE `SCOOTERS` S
-      SET complainState = 0
-      WHERE S.`scooterID` = NEW.scooterID;
+        UPDATE `SCOOTERS` S
+        SET complainState = 0
+        WHERE S.`scooterID` = NEW.scooterID;
     END IF;
   END |
 
@@ -223,14 +243,56 @@ SELECT '<CREATE RELOADS TRIGGER>' AS '';
 CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
   FOR EACH ROW
   BEGIN
-    IF NEW.initialLoad > NEW.finalLoad
-       AND NEW.starttime > NEW.endtime
-       AND TIME(NEW.starttime) NOT BETWEEN '22:00:00' and '07:00:00'
-       AND TIME(NEW.endtime) NOT BETWEEN '22:00:00' and '07:00:00'
-       THEN
-          signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+
+  set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
+
+  IF @var = "inReload" THEN
+    signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+
+  ELSEIF NEW.endtime IS NULL THEN
+        IF (HOUR(TIME(NEW.starttime)) NOT BETWEEN 22 AND 23)
+            AND (HOUR(TIME(NEW.starttime)) NOT BETWEEN 0 AND 7)
+            THEN
+                signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+        ELSE
+             UPDATE `SCOOTERS` S
+             SET availability = "inReload"
+             WHERE S.`scooterID` = NEW.scooterID;
+
+              SET NEW.initialLoad = (SELECT batteryLevel FROM SCOOTERS WHERE scooterID = NEW.scooterID),
+                  NEW.sourceX = (SELECT locationX FROM SCOOTERS WHERE scooterID = NEW.scooterID),
+                  NEW.sourceY = (SELECT locationY FROM SCOOTERS WHERE scooterID = NEW.scooterID);
+
+        END IF;
+  ELSEIF NEW.endtime IS NOT NULL THEN
+        IF NEW.initialLoad > NEW.finalLoad AND NEW.starttime > NEW.endtime
+            AND ((HOUR(TIME(NEW.starttime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.starttime)) NOT BETWEEN 0 AND 7))
+            AND ((HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7))
+            THEN
+              signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+
+        END IF;
     END IF;
   END |
+
+  CREATE TRIGGER RELOADS_TRIGGER_2 BEFORE UPDATE ON `RELOADS`
+    FOR EACH ROW
+    BEGIN
+
+    set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
+    IF @var != "inReload" THEN
+        signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+    ELSE
+        UPDATE `SCOOTERS` S
+        SET availability = "available"
+        WHERE S.`scooterID` = NEW.scooterID;
+
+        IF TIME(NEW.endtime) NOT BETWEEN '22:00:00' and '07:00:00' THEN
+            INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price)
+            VALUES (NEW.scooterID, NEW.userID, 20);
+        END IF;
+    END IF;
+    END |
 
 SELECT '<CREATE TRIPS TRIGGER>' AS '';
 CREATE TRIGGER TRIPS_TRIGGER BEFORE INSERT ON `TRIPS`
@@ -321,51 +383,3 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 (@SID,`userID`,@x, @y, @i , @j ,`starttime`,`endtime`)
 SET `scooterID` = @SID + 1, sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
-
-/*
-CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
-( `ID` int unsigned NOT NULL,
-  `lastname` varchar(30) NOT NULL,
-  `firstname` varchar(30) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `phone` varchar(10) NOT NULL,
-  `bankaccount` varchar(16) NOT NULL,
-  PRIMARY KEY(`ID`)
-) engine = innodb;
-
-CREATE TABLE IF NOT EXISTS `REGISTRED_ADDRESS`
-( `ID` int unsigned NOT NULL,
-  `city` varchar(30) NOT NULL,
-  `cp` int NOT NULL,
-  `street` varchar(40) NOT NULL,
-  `number` int NOT NULL,
-  PRIMARY KEY(`ID`)
-) engine = innodb;
-
-LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml'
-INTO TABLE `REGISTRED_USERS`
-ROWS IDENTIFIED BY '<user>';
-
-LOAD XML LOCAL INFILE 'data2019/registeredUsers.xml'
-INTO TABLE `REGISTRED_ADDRESS`
-ROWS IDENTIFIED BY '<address>';
-
-CREATE TABLE IF NOT EXISTS `ANONYME_USERS`
-( `ID`  int unsigned NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `bankaccount` varchar(16) NOT NULL,
-  PRIMARY KEY(`ID`)
-) engine = innodb;
-
-LOAD XML LOCAL INFILE 'data2019/anonyme_users.xml'
-INTO TABLE `ANONYME_USERS`
-ROWS IDENTIFIED BY '<user>';
-
-CREATE TABLE IF NOT EXISTS `ALL_USERS`
-( `ID` int unsigned NOT NULL,
-  PRIMARY KEY(`ID`)
-) engine = innodb;
-
-INSERT INTO ALL_USERS (`ID`) SELECT `ID` FROM REGISTRED_USERS;
-INSERT INTO ALL_USERS (`ID`) SELECT `ID` FROM ANONYME_USERS;
-*/

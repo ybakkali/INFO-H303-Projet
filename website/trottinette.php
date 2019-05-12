@@ -69,20 +69,34 @@
 			if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 				if (isset($_GET["reserve"]) && !empty('$_GET["reserve"]'))
 					reserveScooter($_GET["ID"],$_SESSION["ID"]);
+				elseif (isset($_GET["reload"]) && !empty('$_GET["reload"]'))
+					reloadScooter($_GET["ID"],$_SESSION["ID"]);
+				elseif (isset($_GET["bringback"]) && !empty('$_GET["bringback"]'))
+					bringBackScooter($_GET["ID"],$_SESSION["ID"],$_GET["x"],$_GET["y"]);
+
 				$informations = getScooterInfo($_GET["ID"]);
 				if (isset($_GET["sortBy"]) && !empty('$_GET["sortBy"]'))
 					$complaints = getScooterComplains($_GET["ID"],$_GET["sortBy"]);
 				else
 					$complaints = getScooterComplains($_GET["ID"],'date');
 			}
-
 			else exit();
 		?>
 		<script>
 
+		function reloadScooter(id) {
+			if (confirm("Do you want to realod the scooter "+id+" ?"))
+				window.location = "trottinette.php?ID="+id +"&reload=true";
+		}
+
 		function reserveScooter(id) {
 			if (confirm("Do you really want to reserve the scooter "+id+" for 3€ ?"))
 				window.location = "trottinette.php?ID="+id +"&reserve=true";
+		}
+
+		function bringBackScooter(id,x,y) {
+			if (confirm("Are you sure to put it here ?"))
+				window.location = "trottinette.php?ID="+id+"&bringback=true&x="+x+"&y="+y+"";
 		}
 		</script>
 		<div class = "w3-row"><br>
@@ -123,7 +137,7 @@
 					</table>
 			</div>
 			<div class= "w3-row">
-				<a href = "" ><button class="button">Reload it</button></a>
+				<a onclick = "reloadScooter(<?php echo $_GET["ID"]; ?>)" ><button class="button">Reload it</button></a>
 				<button class="button" onclick="toggleModal()">Bring back</button>
 				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
 				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
@@ -167,7 +181,7 @@
 			<div class="modal-content">
 				<div id="popupmap" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
 				<br>
-				<button onclick="alert('Position : ' + nextMarker.getLatLng().lat + ', ' + nextMarker.getLatLng().lng)">Done</button>
+				<button onclick="bringBackScooter(<?php echo $_GET["ID"]; ?>,nextMarker.getLatLng().lat, nextMarker.getLatLng().lng)">Done</button>
 			</div>
 		</div>
 

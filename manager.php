@@ -267,6 +267,22 @@ function addScooter($model) { // insérer/supprimer une (nouvelle) trottinette d
   }
 }
 
+function reloadScooter($sid,$uid) { // insérer/supprimer une (nouvelle) trottinette dans le système
+  $adding = "INSERT INTO `RELOADS`(scooterID,userID)
+             VALUES($sid,$uid)";
+  if (!(mysqli_query($GLOBALS['link'], $adding))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
+
+function bringBackScooter($sid,$uid,$x,$y) {
+  $adding = "UPDATE`RELOADS`
+             SET finalLoad = 4, destinationX = $x, destinationY = $y, endtime = CURRENT_TIMESTAMP
+             WHERE scooterID = $sid AND userID = $uid AND endtime IS NULL ";
+  if (!(mysqli_query($GLOBALS['link'], $adding))) {
+      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+  }
+}
 
 function removeScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
   updateScooterStatus($sid, 'defective');
@@ -282,11 +298,10 @@ function fixScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans
 
 function reserveScooter($sid,$uid) { //insérer/supprimer une (nouvelle) trottinette dans le système
     $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price)
-                      VALUES ($sid, $uid, 3)";
+              VALUES ($sid, $uid, 3)";
     if (!(mysqli_query($GLOBALS['link'], $extra))) {
         echo "Error : (could not insert new data !) : " . $extra . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
     }
-    updateScooterStatus($sid, 'occupy');
 }
 
 function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaque trottinette (libre, utilisée, en recharge, . . . )
