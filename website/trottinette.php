@@ -67,7 +67,7 @@
 		<?php
 			if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 				if (isset($_GET["reserve"]) && !empty('$_GET["reserve"]'))
-					reserveScooter($_GET["ID"]);
+					reserveScooter($_GET["ID"],$_SESSION["ID"]);
 				$informations = getScooterInfo($_GET["ID"]);
 				if (isset($_GET["sortBy"]) && !empty('$_GET["sortBy"]'))
 					$complaints = getScooterComplains($_GET["ID"],$_GET["sortBy"]);
