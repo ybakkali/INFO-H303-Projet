@@ -137,13 +137,8 @@
 					</table>
 			</div>
 			<div class= "w3-row">
-<<<<<<< HEAD
 				<a onclick = "reloadScooter(<?php echo $_GET["ID"]; ?>)" ><button class="button">Reload it</button></a>
-				<button class="button" onclick="toggleModal()">Bring back</button>
-=======
-				<a href = "" ><button class="button">Reload it</button></a>
 				<button class="button" onclick="document.getElementById('map').style.visibility = 'hidden';toggleModal();">Bring back</button>
->>>>>>> 342c8bcf7af154dee2580fe0d0d6323b0a03212f
 				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
 				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
 			</div>
