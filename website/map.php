@@ -10,7 +10,7 @@
 
 	<?php include("global.php");?>
 	<?php session_start();?>
-	<?php include("header.php");?>
+	<?php include("header.html");?>
 	<?php include("../manager.php");?>
 		<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; top:60px; width: 100%; height: 93.9%;"></div>
 <script>

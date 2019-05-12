@@ -25,7 +25,7 @@
 	  <?php
 	    include("global.php");
 			session_start();
-			include("header.php");
+			include("header.html");
 	    include("../manager.php");
 			if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
 		?>
