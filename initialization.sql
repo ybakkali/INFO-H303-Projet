@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `MECHANIC_ADDRESS`
 
 SELECT '<CREATE SCOOTERS TABLE>' AS '';
 CREATE TABLE IF NOT EXISTS `SCOOTERS`
-( `scooterID` int unsigned NOT NULL,
+( `scooterID` int unsigned AUTO_INCREMENT NOT NULL,
   `commissioningDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modelNumber` varchar(30) NOT NULL,
   `complainState` boolean NOT NULL DEFAULT False,
@@ -159,6 +159,21 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
       REFERENCES SCOOTERS(scooterID)
       ON UPDATE CASCADE,
   CONSTRAINT fk_user FOREIGN KEY(userID)
+      REFERENCES ALL_USERS(ID)
+      ON UPDATE CASCADE
+) engine = innodb;
+
+SELECT '<CREATE EXTRA_PAYMENT TABLE>' AS '';
+CREATE TABLE IF NOT EXISTS `EXTRA_PAYMENT`
+( `scooterID` int unsigned NOT NULL,
+  `userID` int unsigned NOT NULL,
+  `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `price` float NOT NULL,
+  PRIMARY KEY(`userID`,`scooterID`,`date`),
+  CONSTRAINT fk_scooter_4 FOREIGN KEY(scooterID)
+      REFERENCES SCOOTERS(scooterID)
+      ON UPDATE CASCADE,
+  CONSTRAINT fk_user_4 FOREIGN KEY(userID)
       REFERENCES ALL_USERS(ID)
       ON UPDATE CASCADE
 ) engine = innodb;
@@ -268,8 +283,8 @@ INTO TABLE `SCOOTERS`
 FIELDS TERMINATED BY ';' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(`scooterID`,`commissioningDate`,`modelNumber`,@var,`batteryLevel`)
-SET `complainState` = IF(@var = 'False',0,1);
+(@SID,`commissioningDate`,`modelNumber`,@var,`batteryLevel`)
+SET `scooterID` = @SID + 1,`complainState` = IF(@var = 'False',0,1);
 
 SELECT '<LOAD COMPLAINTS TABLE>' AS '';
 LOAD DATA LOCAL INFILE 'data2019/reparations.csv' IGNORE
@@ -277,14 +292,17 @@ INTO TABLE `COMPLAINTS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(`scooterID`, `userID`, @dummy, `date`, @dummy);
+(@SID, `userID`, @dummy, `date`, @dummy)
+SET `scooterID` = @SID + 1;
 
 SELECT '<LOAD REPARATIONS TABLE>' AS '';
 LOAD DATA LOCAL INFILE 'data2019/reparations.csv' IGNORE
 INTO TABLE `REPARATIONS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+IGNORE 1 ROWS
+(@SID, `userID`, `mechanicID`, `complainTime`, `repaireTime`)
+SET `scooterID` = @SID + 1;
 
 SELECT '<LOAD RELOADS TABLE>' AS '';
 LOAD DATA LOCAL INFILE 'data2019/reloads.csv' IGNORE
@@ -292,8 +310,8 @@ INTO TABLE `RELOADS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(`scooterID`,`userID`,`initialLoad`,`finalLoad`,@x, @y, @i , @j,`starttime`,`endtime`)
-SET sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
+(@SID,`userID`,`initialLoad`,`finalLoad`,@x, @y, @i , @j,`starttime`,`endtime`)
+SET `scooterID` = @SID + 1, sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
 
 SELECT '<LOAD TRIPS TABLE>' AS '';
 LOAD DATA LOCAL INFILE 'data2019/trips.csv' IGNORE
@@ -301,8 +319,8 @@ INTO TABLE `TRIPS`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(`scooterID`,`userID`,@x, @y, @i , @j ,`starttime`,`endtime`)
-SET sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
+(@SID,`userID`,@x, @y, @i , @j ,`starttime`,`endtime`)
+SET `scooterID` = @SID + 1, sourceX = @y, sourceY = @x, destinationX = @j, destinationY = @i;
 
 /*
 CREATE TABLE IF NOT EXISTS `REGISTRED_USERS`
