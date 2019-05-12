@@ -427,6 +427,168 @@ function getAllUsersInfo() {
     return $items;
 }
 
+
+function getR1() {
+  $r1 = "  SELECT s.`scooterID`, s.`locationX`, s.`locationY`
+           FROM `SCOOTERS` s
+           WHERE s.`availability` = 'available'";
+  $result = $GLOBALS['link']->query($r1);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
+function getR2() {
+  $r2  = "SELECT DISTINCT
+          userID
+      FROM
+          RELOADS
+      WHERE
+          userID NOT IN(
+          SELECT DISTINCT
+              userID
+          FROM
+              (
+              SELECT
+                  userID,
+                  scooterID
+              FROM
+                  RELOADS
+              UNION ALL
+          SELECT
+              userID,
+              scooterID
+          FROM
+              (
+              SELECT DISTINCT
+                  userID,
+                  scooterID
+              FROM
+                  RELOADS
+              INNER JOIN TRIPS USING(userID, scooterID)
+          ) alias1
+          ) alias2
+      GROUP BY
+          userID,
+          scooterID
+      HAVING
+          COUNT(*) = 1
+      )";
+
+
+  $result = $GLOBALS['link']->query($r2);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
+function getR3() {
+  $r3 = "  SELECT T.`scooterID`
+           FROM `TRIPS` T
+           GROUP BY T.`scooterID`
+           HAVING sum(ST_Distance_Sphere(point(T.`sourceX`, T.`sourceY`), point(T.`destinationX`, T.`destinationY`)))
+
+       =( SELECT max(`Distance`)
+          FROM ( SELECT S.`scooterID`, sum(ST_Distance_Sphere(point(S.`sourceX`, S.`sourceY`), point(S.`destinationX`, S.`destinationY`))) as `Distance`
+                 FROM `TRIPS` S
+                 GROUP BY S.`scooterID`
+                ) SUM_SCOOTER_DISTANCE
+        )";
+  $result = $GLOBALS['link']->query($r3);
+
+
+  if (mysqli_num_rows($result) > 0) {
+          $data = mysqli_fetch_assoc($result);
+  }
+  //print_r($data["scooterID"]);
+  return $data["scooterID"];
+}
+
+
+function getR4() {
+  $r4 = "  SELECT `scooterID`
+           FROM `REPARATIONS`
+           GROUP BY `scooterID`
+           HAVING count(`scooterID`) >= 10";
+  $result = $GLOBALS['link']->query($r4);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
+
+function getR5() {
+  $r5 = "  SELECT `userID`,
+        count(`userID`) as `Total trips`,
+        SEC_TO_TIME(AVG(TIME_TO_SEC(`duration`))) as `Average duration`,
+        sum(`price`) AS `Total amount (€)`
+        FROM `TRIPS`
+        GROUP BY `userID`
+        HAVING count(`userID`) >= 10";
+
+  $result = $GLOBALS['link']->query($r5);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
+
 /*
 $d = new DateTime('2017-01-01T19:40:36');
 addNote(574,1000274,78849393673150838933, $d, "ok");*/

@@ -90,6 +90,7 @@
 	      map.fitBounds(path.getBounds());
 				toggleModal();
 	    }
+			window.addEventListener("click", windowOnClick);
 	  </script>
 	</body>
 </html>

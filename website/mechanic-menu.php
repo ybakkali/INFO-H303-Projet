@@ -21,7 +21,7 @@
 				<a href="mechanic-scooter.php?sortBy=totalComplaints" class="w3-button">Manage scooters</a><br>
 				<a href="mechanic-complaints.php" class="w3-button">Manage complaints</a><br>
 				<a href="mechanic-users.php" class="w3-button">Manage users</a><br>
-				<a href="mechanic-request.php" class="w3-button">Show request</a>
+				<a href="mechanic-requests.php" class="w3-button">Show requests</a>
 			</div>
 		</header>
 	</body>

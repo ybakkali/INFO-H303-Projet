@@ -1,7 +1,30 @@
 <!DOCTYPE html>
+<?php
+	include("global.php");
+	include("../manager.php");
+	if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) {
+		echo "<script>window.location = 'home.php';</script>";
+		exit();
+	}
+	if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
+			if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
+						removeScooter($_GET["ID"]);
+			else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
+				repairScooter($_GET["ID"]);
+			else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
+				fixScooter($_GET["ID"]);
+	}
+?>
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+		integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+		crossorigin=""></script>
 		<style>
 		#scrolltable { margin-top: 35px; height: 500px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
@@ -19,27 +42,7 @@
 		<title> DataBase Project - Scooter </title>
 	</head>
 	<body>
-		<?php include("global.php");
-					session_start();
-					include("header.php");
-	        include("../manager.php");
-					if (!(isset($_SESSION["ID"]) && $_SESSION["type"] == "mechanic")) echo "<script>window.location = 'home.php';</script>";
-		?>
-
-		<?php
-
-		  if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
-			 		if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
-		      			removeScooter($_GET["ID"]);
-					else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
-						repairScooter($_GET["ID"]);
-					else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
-						fixScooter($_GET["ID"]);
-			}
-		?>
-
-		<script>
-		//window.history.pushState('', 'DataBase Project - Scooter', 'mechanic-scooter.php');
+		<script src="popup.js">
 		function deleteScooter(id) {
 			if (confirm("Do you really want to delete the scooter "+id+" ?"))
 				window.location = "mechanic-scooter.php?ID="+id +"&delete=true&sortBy=totalComplaints";
@@ -98,5 +101,35 @@
 			</tbody>
 	    </table>
 	  </div>
+		<button onclick="toggleModal()">Add New Scooter</button>
+		<div class="modal" id="modal">
+			<div class="modal-content" style="background-color:white; top:10%">
+				<h1>Add New Scooter</h1>
+				<label>Model Number</label><br>
+				<input type="text" id="modelNumber" placeholder="Enter Model Number" required><br>
+				<br>
+				<div id="map" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
+				<br>
+				<button onclick="alert('Model Number : '+document.getElementById('modelNumber').value + ' Position : ' + marker.getLatLng().lat + ', ' + marker.getLatLng().lng)">Done</button>
+			</div>
+		</div>
+		<script>
+			window.addEventListener("click", windowOnClick);
+
+			var map = L.map('map');
+			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			subdomains: ['a', 'b', 'c']
+			}).addTo(map);
+			map.setView([50.8499268,4.37],15);
+
+			var scooter = L.icon({
+				iconUrl: "images/marker-blue.png",
+				iconSize: [40,40],
+				iconAnchor: [20,40]
+			});
+
+			var marker = L.marker([50.8499268,4.37],{icon:scooter,draggable:true}).addTo(map);
+		</script>
 	</body>
 </html>

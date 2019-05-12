@@ -4,7 +4,7 @@
 	include("global.php");
 	include("../manager.php");
 	if (isloggedIn()){
-		echo "<script>window.location = 'menu.php';</script>";
+		echo "<script>window.location = 'home.php';</script>";
 		exit();
 	}
 

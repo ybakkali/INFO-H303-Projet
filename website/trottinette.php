@@ -137,8 +137,13 @@
 					</table>
 			</div>
 			<div class= "w3-row">
+<<<<<<< HEAD
 				<a onclick = "reloadScooter(<?php echo $_GET["ID"]; ?>)" ><button class="button">Reload it</button></a>
 				<button class="button" onclick="toggleModal()">Bring back</button>
+=======
+				<a href = "" ><button class="button">Reload it</button></a>
+				<button class="button" onclick="document.getElementById('map').style.visibility = 'hidden';toggleModal();">Bring back</button>
+>>>>>>> 342c8bcf7af154dee2580fe0d0d6323b0a03212f
 				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
 				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
 			</div>
@@ -191,7 +196,9 @@
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 			subdomains: ['a', 'b', 'c']
 			}).addTo(map);
-			map.setView([<?php echo $informations["locationX"].",".$informations["locationY"]?>],15);
+			map.setView([<?php 	if ($informations["availability"] != "defective") echo $informations["locationX"].",".$informations["locationY"];
+													else echo "0,0";
+										?>],15);
 
 			var scooter = L.icon({
 				iconUrl: "images/marker-<?php if ($informations["availability"] == "available") echo "blue";
@@ -203,9 +210,11 @@
 				iconAnchor: [20,40]
 			});
 
-			L.marker([<?php echo $informations["locationX"].",".$informations["locationY"]?>],{icon:scooter}).addTo(map);
-		</script>
-		<script>
+			L.marker([<?php if ($informations["availability"] != "defective") echo $informations["locationX"].",".$informations["locationY"];
+											else echo "0,0";
+								?>],{icon:scooter}).addTo(map);
+
+			// PopUpMap
 			var popupmap = L.map('popupmap').setView([<?php echo $informations["locationX"].",".$informations["locationY"]?>],16);
 			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -224,6 +233,15 @@
 			var lastMarker = L.marker([<?php echo $informations["locationX"].",".$informations["locationY"]?>],{icon:lastIcon}).addTo(popupmap);
 			var nextMarker = L.marker([<?php echo ($informations["locationX"]-0.001).",".$informations["locationY"]?>],{icon:nextIcon,draggable:true}).addTo(popupmap);
 			nextMarker.bindPopup("Drag me!").openPopup();
+
+			function windowOnClick(event) {
+			 if (event.target ===  document.getElementById("modal")) {
+				 toggleModal();
+				 document.getElementById("map").style.visibility = "visible";
+			 }
+			}
+			window.addEventListener("click", windowOnClick);
+
 		</script>
 	</body>
 </html>
