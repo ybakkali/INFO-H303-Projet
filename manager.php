@@ -260,8 +260,8 @@ function userTripsHistory($uid,$sortBy) { //consulter l'historique des déplacem
 }*/
 
 function addScooter($model, $x, $y) { // insérer/supprimer une (nouvelle) trottinette dans le système
-  $adding = "INSERT INTO `SCOOTERS` (modelNumber, locationX, locationY)
-             VALUES ('$model', $x, $y)";
+  $adding = "INSERT INTO `SCOOTERS` (modelNumber, locationX, locationY, lastLocationTime)
+             VALUES ('$model', $x, $y,CURRENT_TIMESTAMP)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
       echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
   }
