@@ -18,7 +18,7 @@
 		<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 			<div class="w3-display-middle w3-text-white w3-xxlarge title">
 				<h1 class="w3-jumbo">Users</h1>
-				<table class="w3-table w3-centered w3-responsive">
+				<table class="w3-table w3-centered w3-responsive w3-large">
 					<tr>
 						<th>ID</th>
 						<th>Last Name</th>
@@ -37,7 +37,7 @@
 												<td>".$user["firstname"]."</td>
 												<td>".$user["phone"]."</td>
 												<td>".$user["bankaccount"]."</td>
-												<td>".$user["street"].", ".$user["number"]."<br>".$user["cp"]." ".$user["city"]."</td>";
+												<td>".$user["street"]." ".$user["number"]."<br>".$user["cp"]." ".$user["city"]."</td>";
 											}
 							else {
 								echo 	" <td></td>

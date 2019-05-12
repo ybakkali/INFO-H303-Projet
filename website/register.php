@@ -81,7 +81,6 @@
 					else {
 							echo "<script>
 									alert('Unsuccessful Registration\\n\\nPlease try again')
-									window.location = 'menu.php';
 								</script>";
 					}
 			}

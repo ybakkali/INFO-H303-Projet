@@ -63,11 +63,11 @@
 				<h1 class="w3-jumbo">Mechanic Login</h1>
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 					<label>ID</label><br>
-					<input type="text" name="ID" value="<?php echo $ID ?>" required><br>
+					<input type="text" name="ID" placeholder="Enter ID" value="<?php echo $ID ?>" required><br>
 					<p class="w3-text-red"><?php echo $IDErr;?></p>
 
 					<label>Password</label><br>
-					<input type="password" name="password" required><br>
+					<input type="password" name="password" placeholder="Enter Password" required><br>
 					<p class="w3-text-red"><?php echo $passwordErr;?></p>
 
 					<input type="submit" name="submit" value="Submit">

@@ -12,7 +12,6 @@
 	if (isset($_GET['ID'])) $ID = $_GET["ID"];
 	$IDErr = $noteErr = "";
 	$ready = false;
-	$result = "";
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
@@ -33,21 +32,19 @@
 		}
 
 	//note
-		if (empty('$_POST["note"]')) {
-				$noteErr = "Note is required";
-				$ready = false;
-		}
-		else {
-			$note = test_input($_POST["note"]);
-			// check if note only contains letters and numbers
-			$ready = $ready && true;
-		}
+		$note = test_input($_POST["note"]);
+		// check if note only contains letters and numbers
+
 		if ($ready) {
 			if ($_POST["state"] == "traited")
 				reparationScooter($ID,$_POST["userID"],$_SESSION["ID"],$_POST["date"],$note);
 			else
 				updateComplaintState($_POST["userID"], $ID, $_POST["date"], $_POST["state"]);
-			$result = "<h2>Complaint successfully treated</h2>";
+
+			echo "<script>
+							alert('Complaint successfully updated');
+							window.location = 'mechanic-complaints.php';
+						</script>";
 		}
 	}
 ?>
@@ -62,7 +59,6 @@
 		<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 			<div class="w3-display-middle w3-text-white w3-xxlarge title">
 				<h1 class="w3-jumbo">Reparation</h1>
-				<?php echo $result ?>
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 					<label>Scooter ID</label><br>
 					<input type="text" name="ID" placeholder="Enter Scooter ID" value="<?php echo $ID ?>" required><br>
@@ -75,7 +71,7 @@
 					<input type="hidden"  name="date" value="<?php echo $_GET["date"] ?>">
 					<input type="hidden"  name="userID" value="<?php echo $_GET["userID"] ?>">
 					<label>Note</label><br>
-					<textarea name="note" placeholder="Enter Note" cols="40" rows="5" required><?php echo $note ?></textarea><br>
+					<textarea name="note" placeholder="Enter Note" cols="40" rows="5"><?php echo $note ?></textarea><br>
 					<p class="w3-text-red"><?php echo $noteErr;?></p>
 
 					<input type="submit" name="submit" value="Submit">

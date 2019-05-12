@@ -12,7 +12,6 @@
 	if (isset($_GET['ID'])) $ID = $_GET["ID"];
 	$IDErr = $descriptionErr = "";
 	$ready = false;
-	$result = "";
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
@@ -44,7 +43,10 @@
 		}
 		if ($ready) {
 			complainScooter($ID,$_SESSION["ID"],$description);
-			$result = "<h2>Complaint successfully sent</h2>";
+			echo "<script>
+							alert('Complaint successfully sent');
+							window.location = 'trottinette.php';
+						</script>";
 		}
 	}
 ?>
@@ -59,7 +61,6 @@
 		<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 			<div class="w3-display-middle w3-text-white w3-xxlarge title">
 				<h1 class="w3-jumbo">Complain</h1>
-				<?php echo $result ?>
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 					<label>ID</label><br>
 					<input type="text" name="ID" placeholder="Enter Scooter ID" value="<?php echo $ID ?>" required><br>
