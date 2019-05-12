@@ -7,12 +7,15 @@
 		exit();
 	}
 	if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
-			if (isset($_GET["delete"]) && $_GET["delete"] = 'true')
+			if (isset($_GET["delete"]) && $_GET["delete"] == 'true')
 						removeScooter($_GET["ID"]);
-			else if (isset($_GET["repair"]) && $_GET["repair"] = 'true')
+			else if (isset($_GET["repair"]) && $_GET["repair"] == 'true')
 				repairScooter($_GET["ID"]);
-			else if (isset($_GET["fix"]) && $_GET["fix"] = 'true')
+			else if (isset($_GET["fix"]) && $_GET["fix"] == 'true')
 				fixScooter($_GET["ID"]);
+	}
+	elseif (isset($_GET["add"]) && $_GET["add"] == 'true') {
+	addScooter($_GET["modelNumber"],$_GET["x"],$_GET["y"]);
 	}
 ?>
 <html lang="en" dir="ltr">
@@ -26,7 +29,7 @@
 		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
 		crossorigin=""></script>
 		<style>
-		#scrolltable { margin-top: 35px; height: 500px; overflow: auto; }
+		#scrolltable { margin-top: 35px; height: 80%; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
@@ -42,7 +45,9 @@
 		<title> DataBase Project - Scooter </title>
 	</head>
 	<body>
-		<script src="popup.js">
+		<?php include("header.html")?>
+		<script src="popup.js"></script>
+		<script>
 		function deleteScooter(id) {
 			if (confirm("Do you really want to delete the scooter "+id+" ?"))
 				window.location = "mechanic-scooter.php?ID="+id +"&delete=true&sortBy=totalComplaints";
@@ -57,9 +62,13 @@
 			if (confirm("Is the scooter "+id+" really repaired?"))
 				window.location = "mechanic-scooter.php?ID="+id +"&fix=true&sortBy=totalComplaints";
 		}
+
+		function addScooter() {
+			window.location = "mechanic-scooter.php?modelNumber="+document.getElementById("modelNumber").value+"&x="+marker.getLatLng().lat+"&y="+marker.getLatLng().lng+"&add=true&sortBy=totalComplaints";
+		}
 		</script>
 
-		<div id="scrolltable">
+		<br><br><div id="scrolltable">
 	    <table>
 			<thead>
 				<tr>
@@ -100,17 +109,17 @@
 				</tr>
 			</tbody>
 	    </table>
-	  </div>
+	  </div><br>
 		<button onclick="toggleModal()">Add New Scooter</button>
 		<div class="modal" id="modal">
 			<div class="modal-content" style="background-color:white; top:10%">
 				<h1>Add New Scooter</h1>
-				<label>Model Number</label><br>
-				<input type="text" id="modelNumber" placeholder="Enter Model Number" required><br>
-				<br>
-				<div id="map" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
-				<br>
-				<button onclick="alert('Model Number : '+document.getElementById('modelNumber').value + ' Position : ' + marker.getLatLng().lat + ', ' + marker.getLatLng().lng)">Done</button>
+					<label>Model Number</label><br>
+					<input type="text" id="modelNumber" placeholder="Enter Model Number" required><br>
+					<br>
+					<div id="map" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
+					<br>
+					<button onclick="addScooter()">Done</button>
 			</div>
 		</div>
 		<script>
