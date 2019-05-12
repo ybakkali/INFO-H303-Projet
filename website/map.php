@@ -30,6 +30,7 @@
 		iconAnchor: [20,40]
 	});
 	var userMarker = L.marker([0,0],{icon:user}).addTo(map);
+	userMarker.bindPopup("<p style = 'text-align: center'>You are here</p>");
 	if (navigator.geolocation)
 	    navigator.geolocation.watchPosition(updateUserMarker);
 

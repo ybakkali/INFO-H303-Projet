@@ -137,8 +137,12 @@
 					</table>
 			</div>
 			<div class= "w3-row">
-				<a onclick = "reloadScooter(<?php echo $_GET["ID"]; ?>)" ><button class="button">Reload it</button></a>
-				<button class="button" onclick="document.getElementById('map').style.visibility = 'hidden';toggleModal();">Bring back</button>
+				<?php
+					if ($_SESSION["type"] != "unregistered") {
+						echo '<a onclick = "reloadScooter('.$_GET["ID"].')" ><button class="button">Reload it</button></a>';
+						echo '<button class="button" onclick="document.getElementById(\'map\').style.visibility = \'hidden\';toggleModal();">Bring back</button>';
+					}
+				?>
 				<button onclick = "reserveScooter(<?php echo $_GET["ID"]; ?>)" class="button">Reserve it</button>
 				<a href = <?php echo "complain.php?ID=".$informations["scooterID"] ?> ><button class="button">Complain</button></a>
 			</div>
