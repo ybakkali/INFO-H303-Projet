@@ -412,6 +412,160 @@ function getAllUsersInfo() {
     return $items;
 }
 
+
+function getR1() {
+  $r1 = "  SELECT s.`scooterID`, s.`locationX`, s.`locationY`
+           FROM `SCOOTERS` s
+           WHERE s.`availability` = 'available'";
+  $result = $GLOBALS['link']->query($r1);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
+/*function getR2() {
+  $r2_1 = " CREATE VIEW  INTERSECTION_RELOADS_TRIPS (userID,scooterID) AS
+            SELECT DISTINCT userID, scooterID
+            FROM RELOADS
+            INNER JOIN TRIPS USING (userID,scooterID)";
+
+  $result2_1 = $GLOBALS['link']->query($r2_1);
+
+  $r2_2 = " CREATE VIEW  UNION_RELOADS_AND_INTERSECTION_RELOADS_TRIPS (userID,scooterID) AS
+            SELECT userID,scooterID
+            FROM RELOADS
+            UNION ALL
+            SELECT userID,scooterID
+            FROM INTERSECTION_RELOADS_TRIPS";
+
+  $result2_2 = $GLOBALS['link']->query($r2_2);
+
+  $r2_3 = " CREATE VIEW  DIFFERENCE_RELOADS_AND_INTERSECTION_RELOADS_TRIPS (userID) AS
+            SELECT DISTINCT userID
+            FROM UNION_RELOADS_AND_INTERSECTION_RELOADS_TRIPS
+            GROUP BY userID, scooterID
+            HAVING COUNT(*) = 1";
+
+  $$result2_3 = $GLOBALS['link']->query($r2_3);
+
+  $r2 = " SELECT DISTINCT userID
+          FROM RELOADS
+          WHERE userID NOT IN ( SELECT userID
+                                FROM DIFFERENCE_RELOADS_AND_INTERSECTION_RELOADS_TRIPS)";
+
+
+  $result = $GLOBALS['link']->query($r2);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}*/
+
+
+function getR3() {
+  $r3 = "  SELECT T.`scooterID`
+           FROM `TRIPS` T
+           GROUP BY T.`scooterID`
+           HAVING sum(ST_Distance_Sphere(point(T.`sourceX`, T.`sourceY`), point(T.`destinationX`, T.`destinationY`)))
+
+       =( SELECT max(`Distance`)
+          FROM ( SELECT S.`scooterID`, sum(ST_Distance_Sphere(point(S.`sourceX`, S.`sourceY`), point(S.`destinationX`, S.`destinationY`))) as `Distance`
+                 FROM `TRIPS` S
+                 GROUP BY S.`scooterID`
+                ) SUM_SCOOTER_DISTANCE
+        )";
+  $result = $GLOBALS['link']->query($r3);
+
+
+  if (mysqli_num_rows($result) > 0) {
+          $data = mysqli_fetch_assoc($result);
+  }
+  //print_r($data["scooterID"]);
+  return $data["scooterID"];
+}
+
+
+function getR4() {
+  $r4 = "  SELECT `scooterID`
+           FROM `REPARATIONS`
+           GROUP BY `scooterID`
+           HAVING count(`scooterID`) >= 10";
+  $result = $GLOBALS['link']->query($r4);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  print_r($items);
+  return $items;
+}
+
+
+
+function getR5() {
+  $r5 = "  SELECT `userID`,
+        count(`userID`) as `Total trips`,
+        SEC_TO_TIME(AVG(TIME_TO_SEC(`duration`))) as `Average duration`,
+        sum(`price`) AS `Total amount (€)`
+        FROM `TRIPS`
+        GROUP BY `userID`
+        HAVING count(`userID`) >= 10";
+
+  $result = $GLOBALS['link']->query($r5);
+
+  $items = array();
+  $count = 0;
+
+  if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+          $items[$count] = ($row);
+          $count++;
+          //echo "Scooter ID: " . $row["scooterID"]. " - Position: " . $row["locationX"]. "," . $row["locationY"]. "\n";
+      }
+  }
+  else {
+      //echo "Didn't find any results.\n";
+  }
+  //print_r($items);
+  return $items;
+}
+
+
 /*
 $d = new DateTime('2017-01-01T19:40:36');
 addNote(574,1000274,78849393673150838933, $d, "ok");*/
