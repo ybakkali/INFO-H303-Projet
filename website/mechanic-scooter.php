@@ -33,14 +33,14 @@
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: center;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }
-		.c1 {width: 87px;}
-		.c2 {width: 170px;}
-		.c3 {width: 120px;}
-		.c4 {width: 90px;}
-		.c5 {width: 115px;}
-		.c6 {width: 132px;}
-		.c7 {width: 130px;}
-		.c8 {width: 100px;}
+		.c1 {width: 10%;}
+		.c2 {width: 20%;}
+		.c3 {width: 10%;}
+		.c4 {width: 10%;}
+		.c5 {width: 10%;}
+		.c6 {width: 10%;}
+		.c7 {width: 10%;}
+		.c8 {width: 10%;}
 		</style>
 		<title> DataBase Project - Scooter </title>
 	</head>
