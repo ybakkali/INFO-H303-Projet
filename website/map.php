@@ -9,10 +9,9 @@
 	crossorigin=""></script>
 
 	<?php include("global.php");?>
-	<?php session_start();?>
 	<?php include("header.html");?>
 	<?php include("../manager.php");?>
-		<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 93.9%;"></div>
+		<div id="map" style=" position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 93.9%; top: 60px "></div>
 <script>
 	var map = L.map('map').setView([50.8499268,4.37],15);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
