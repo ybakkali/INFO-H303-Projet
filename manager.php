@@ -83,7 +83,7 @@ function addUnregiteredUser($password, $bankaccount) { //inscrire un nouvel util
     $adding = "INSERT INTO `ALL_USERS` (ID, password, bankaccount)
                VALUES ($ID, '$password', '$bankaccount')";
     if (!(mysqli_query($GLOBALS['link'], $adding))) {
-        echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+        echo mysqli_error($GLOBALS['link']). "<br>";
         return false;
     }
     else {
@@ -100,13 +100,13 @@ function addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone
     $adding = "INSERT INTO `ALL_USERS` (ID, password, bankaccount, lastname, firstname, phone)
                VALUES ($ID, '$password', '$bankaccount', '$lastname', '$firstname', '$phone')";
     if (!(mysqli_query($GLOBALS['link'], $adding))) {
-        echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+        echo mysqli_error($GLOBALS['link']),"\n";
         return false;
     }
     $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
                     VALUES ($ID, '$adrsCity', $adrsZip, '$adrsStreet', $adrsNumber)";
     if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
-        echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+        echo mysqli_error($GLOBALS['link']),"\n";
         return false;
     }
     else {
@@ -202,7 +202,7 @@ function complainScooter($scooter_id, $user_id, $cmpln_text) { //introduire une 
   $adding = "INSERT INTO `COMPLAINTS` (scooterID, userID, description)
              VALUES ($scooter_id, $user_id, '$cmpln_text')";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -210,7 +210,7 @@ function reparationScooter($scooter_id, $userID, $mechanic_id, $date, $note_text
   $adding = "INSERT INTO `REPARATIONS` (scooterID, userID, mechanicID, complainTime, note)
              VALUES ($scooter_id, $userID, $mechanic_id, '$date', '$note_text')";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -263,7 +263,7 @@ function addScooter($model, $x, $y) { // insérer/supprimer une (nouvelle) trott
   $adding = "INSERT INTO `SCOOTERS` (modelNumber, locationX, locationY, lastLocationTime)
              VALUES ('$model', $x, $y,CURRENT_TIMESTAMP)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -280,7 +280,7 @@ function bringBackScooter($sid,$uid,$x,$y) {
              SET finalLoad = 4, destinationX = $x, destinationY = $y, endtime = CURRENT_TIMESTAMP
              WHERE scooterID = $sid AND userID = $uid AND endtime IS NULL ";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -300,7 +300,7 @@ function reserveScooter($sid,$uid) { //insérer/supprimer une (nouvelle) trottin
     $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
               VALUES ($sid, $uid, 3, 'reservation')";
     if (!(mysqli_query($GLOBALS['link'], $extra))) {
-        echo "Error : (could not insert new data !) : " . $extra . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+        echo mysqli_error($GLOBALS['link']). "<br>";
     }
 }
 
@@ -309,7 +309,7 @@ function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaq
                     SET `availability` = '$new_status'
                     WHERE `scooterID` = $sid";
   if (!(mysqli_query($GLOBALS['link'], $update_status))) {
-      echo "Error : (could not insert new data !) : " . $update_status . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -318,7 +318,7 @@ function updateComplaintState($uid, $sid, $date, $new_state) { //gérer, traiter
                     SET `state` = '$new_state'
                     WHERE `scooterID` = $sid AND `userID` = $uid AND `date` = '$date'";
   if (!(mysqli_query($GLOBALS['link'], $update_state))) {
-      echo "Error : (could not insert new data !) : " . $update_state . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
@@ -370,13 +370,13 @@ function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZ
                           SET `ID` = $new_id, `lastname` = '$lastname', `firstname` = '$firstname', `phone` = '$phone'
                           WHERE `ID` = $uid";
           if (!(mysqli_query($GLOBALS['link'], $update_user))) {
-              echo "Error : (could not insert new data !) : " . $update_user . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+              echo mysqli_error($GLOBALS['link']). "<br>";
               return false;
           }
           $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
                           VALUES ($new_id, '$adrsCity', $adrsZip, '$adrsStreet', $adrsNumber)";
           if (!(mysqli_query($GLOBALS['link'], $adding_adrs))) {
-              echo "Error : (could not insert new data !) : " . $adding_adrs . "<br>" . mysqli_error($GLOBALS['link']),"\n";
+              echo mysqli_error($GLOBALS['link']),"\n";
               return false;
           }
           return true;
