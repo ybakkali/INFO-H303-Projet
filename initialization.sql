@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `SCOOTERS`
   `modelNumber` varchar(30) NOT NULL,
   `complainState` boolean NOT NULL DEFAULT False,
   `batteryLevel` int unsigned NOT NULL DEFAULT 4,
-  `locationX` float  NULL,
-  `locationY` float  NULL,
+  `locationX` DECIMAL(10, 5)  NULL,
+  `locationY` DECIMAL(11, 5)  NULL,
   `lastLocationTime` DATETIME NULL DEFAULT '2017-01-01T09:00:00',
   `availability` ENUM('available','occupy','inRepair','inReload','defective') NOT NULL DEFAULT 'available',
   PRIMARY KEY(`scooterID`)
@@ -169,6 +169,7 @@ CREATE TABLE IF NOT EXISTS `EXTRA_PAYMENT`
   `userID` int unsigned NOT NULL,
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `price` float NOT NULL,
+  `type` ENUM('reservation','penalty') NOT NULL,
   PRIMARY KEY(`userID`,`scooterID`,`date`),
   CONSTRAINT fk_scooter_4 FOREIGN KEY(scooterID)
       REFERENCES SCOOTERS(scooterID)
@@ -188,7 +189,7 @@ CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
         SET NEW.locationX = NULL, NEW.locationY = NULL, NEW.lastLocationTime = NULL;
       ELSEIF (NEW.availability = 'available' OR NEW.availability = 'inRepair')
                AND OLD.availability = 'defective' THEN
-               signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+               signal sqlstate '45000'  SET MESSAGE_TEXT = 'This scooter is defective, you can not repaired';
       END IF;
   END |
 
@@ -198,12 +199,12 @@ CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
     BEGIN
         set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
 
-        IF @var != "occupy" THEN
+        IF @var != "occupy" AND NEW.type = "reservation" THEN
             UPDATE `SCOOTERS` S
             SET availability = "occupy"
             WHERE S.`scooterID` = NEW.scooterID;
         ELSE
-            signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+            signal sqlstate '45000'  SET MESSAGE_TEXT = 'Already reserved';
         END IF;
     END |
 
@@ -222,11 +223,11 @@ CREATE TRIGGER REPARATIONS_TRIGGER BEFORE INSERT ON `REPARATIONS`
   BEGIN
 
     IF NEW.complainTime > NEW.repaireTime THEN
-        signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+        signal sqlstate '45000'  SET MESSAGE_TEXT = 'repaireTime < complainTime';
     ELSEIF (HOUR(TIME(NEW.repaireTime)) NOT BETWEEN 22 AND 23)
             AND (HOUR(TIME(NEW.repaireTime)) NOT BETWEEN 0 AND 7)
             THEN
-                signal sqlstate '45000'  SET MESSAGE_TEXT = @repair;
+                signal sqlstate '45000'  SET MESSAGE_TEXT = 'A reparation should be between 22:00 and 7:00';
     ELSE
         UPDATE `COMPLAINTS` C
         SET state = 'treated'
@@ -247,13 +248,13 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
   set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
 
   IF @var = "inReload" THEN
-    signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+    signal sqlstate '45000'  SET MESSAGE_TEXT = 'Already in reload';
 
   ELSEIF NEW.endtime IS NULL THEN
         IF (HOUR(TIME(NEW.starttime)) NOT BETWEEN 22 AND 23)
             AND (HOUR(TIME(NEW.starttime)) NOT BETWEEN 0 AND 7)
             THEN
-                signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+                signal sqlstate '45000'  SET MESSAGE_TEXT = 'A reload should be between 22:00 and 7:00';
         ELSE
              UPDATE `SCOOTERS` S
              SET availability = "inReload"
@@ -269,7 +270,7 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
             AND ((HOUR(TIME(NEW.starttime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.starttime)) NOT BETWEEN 0 AND 7))
             AND ((HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7))
             THEN
-              signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+              signal sqlstate '45000'  SET MESSAGE_TEXT = 'Constraint not respect it';
         ELSE
             UPDATE IGNORE `SCOOTERS` S
             SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime
@@ -284,7 +285,7 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
 
     set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
     IF @var != "inReload" THEN
-        signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+        signal sqlstate '45000'  SET MESSAGE_TEXT = 'Not in reload';
     ELSE
         UPDATE `SCOOTERS` S
         SET availability = "available"
@@ -295,8 +296,8 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
         WHERE S.`scooterID` = NEW.scooterID AND NEW.endtime > S.`lastLocationTime`;
 
         IF (HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7) THEN
-            INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price)
-            VALUES (NEW.scooterID, NEW.userID, 20);
+            INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
+            VALUES (NEW.scooterID, NEW.userID, 20, "penalty");
         END IF;
     END IF;
     END |
@@ -306,7 +307,7 @@ CREATE TRIGGER TRIPS_TRIGGER BEFORE INSERT ON `TRIPS`
   FOR EACH ROW
   BEGIN
     IF NEW.starttime > NEW.endtime THEN
-          signal sqlstate '45000'  SET MESSAGE_TEXT = 'An error occurred';
+          signal sqlstate '45000'  SET MESSAGE_TEXT = 'endtime < starttime';
     ELSE
 
       SET NEW.duration = TIMEDIFF(NEW.endtime, NEW.starttime),

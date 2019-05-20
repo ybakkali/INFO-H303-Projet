@@ -297,8 +297,8 @@ function fixScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans
 }
 
 function reserveScooter($sid,$uid) { //insérer/supprimer une (nouvelle) trottinette dans le système
-    $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price)
-              VALUES ($sid, $uid, 3)";
+    $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
+              VALUES ($sid, $uid, 3, "reservation")";
     if (!(mysqli_query($GLOBALS['link'], $extra))) {
         echo "Error : (could not insert new data !) : " . $extra . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
     }
