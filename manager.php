@@ -271,7 +271,7 @@ function reloadScooter($sid,$uid) { // insérer/supprimer une (nouvelle) trottin
   $adding = "INSERT INTO `RELOADS`(scooterID,userID)
              VALUES($sid,$uid)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
+      echo mysqli_error($GLOBALS['link']). "<br>";
   }
 }
 
