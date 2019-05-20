@@ -8,7 +8,7 @@
 	}
 	if (isset($_GET["ID"]) && !empty('$_GET["ID"]')) {
 			if (isset($_GET["delete"]) && $_GET["delete"] == 'true')
-						removeScooter($_GET["ID"]);
+				removeScooter($_GET["ID"]);
 			else if (isset($_GET["repair"]) && $_GET["repair"] == 'true')
 				repairScooter($_GET["ID"]);
 			else if (isset($_GET["fix"]) && $_GET["fix"] == 'true')

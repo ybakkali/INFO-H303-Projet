@@ -13,7 +13,7 @@
 		<meta charset="utf-8">
 		<title>DataBase Project - Complaints</title>
 		<style>
-		#scrolltable {margin-left: 5px; margin-top: 35px; height: 430px; overflow: auto; }
+		#scrolltable {margin-left: 5px; margin-top: 35px; height: 800px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px; cursor: pointer; }

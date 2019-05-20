@@ -10,7 +10,7 @@
 		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
 		crossorigin=""></script>
 		<style>
-		#scrolltable {margin-left: 10px; margin-top: 80px; height: 500px; overflow: auto; }
+		#scrolltable {margin-left: 10px; margin-top: 80px; height: 850px; overflow: auto; }
 		#scrolltable table { border-collapse: collapse; width: 100%; text-align: left;}
 		#scrolltable tr:nth-child(even) { background: #EEE; }
 		#scrolltable th div { position: absolute; margin-top: -25px;cursor: pointer; }
@@ -24,9 +24,9 @@
 	<body>
 	  <?php
 	    include("global.php");
-			include("header.html");
 	    include("../manager.php");
 			if (!isloggedIn()) echo "<script>window.location = 'home.php';</script>";
+			include("header.html");
 		?>
 		<script src="popup.js"></script>
 		<div id="scrolltable">
@@ -58,7 +58,7 @@
 	    </div>
 			<div class="modal" id="modal">
 				<div class="modal-content">
-	    		<div id="map" style="position:relative; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
+	    		<div id="map" style="position:absolute; margin-left: auto; margin-right: auto; width: 100%; height: 100%"></div>
 				</div>
 			</div>
 

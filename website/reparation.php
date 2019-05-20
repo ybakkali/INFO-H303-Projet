@@ -40,11 +40,7 @@
 				reparationScooter($ID,$_POST["userID"],$_SESSION["ID"],$_POST["date"],$note);
 			else
 				updateComplaintState($_POST["userID"], $ID, $_POST["date"], $_POST["state"]);
-
-			echo "<script>
-							alert('Complaint successfully updated');
-							window.location = 'mechanic-complaints.php';
-						</script>";
+			echo "<script>window.location = 'mechanic-complaints.php?scooterID=".$ID."';</script>";
 		}
 	}
 ?>

@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `TRIPS`
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
   `duration` TIME NOT NULL,
-  `price` float NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
 
   PRIMARY KEY(`userID`,`scooterID`,`starttime`),
   CONSTRAINT fk_scooter FOREIGN KEY(scooterID)
@@ -189,7 +189,7 @@ CREATE TRIGGER SCOOTERS_TRIGGER BEFORE UPDATE ON `SCOOTERS`
         SET NEW.locationX = NULL, NEW.locationY = NULL, NEW.lastLocationTime = NULL;
       ELSEIF (NEW.availability = 'available' OR NEW.availability = 'inRepair')
                AND OLD.availability = 'defective' THEN
-               signal sqlstate '45000'  SET MESSAGE_TEXT = 'This scooter is defective, you can not repaired';
+               signal sqlstate '45000'  SET MESSAGE_TEXT = 'This scooter is defective, you cannot repair it';
       END IF;
   END |
 
@@ -270,7 +270,7 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
             AND ((HOUR(TIME(NEW.starttime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.starttime)) NOT BETWEEN 0 AND 7))
             AND ((HOUR(TIME(NEW.endtime)) NOT BETWEEN 22 AND 23) AND (HOUR(TIME(NEW.endtime)) NOT BETWEEN 0 AND 7))
             THEN
-              signal sqlstate '45000'  SET MESSAGE_TEXT = 'Constraint not respect it';
+              signal sqlstate '45000'  SET MESSAGE_TEXT = 'Constraint not respected';
         ELSE
             UPDATE IGNORE `SCOOTERS` S
             SET S.`locationX` = NEW.destinationX, S.`locationY` = NEW.destinationY, S.`lastLocationTime` = NEW.endtime

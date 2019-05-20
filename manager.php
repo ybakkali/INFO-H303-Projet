@@ -146,9 +146,9 @@ function getScooterInfo($sid) { // consulter les informations associées à chaq
                  WHERE `scooterID` = $sid";
     $result = mysqli_query($GLOBALS['link'], $info_req);
     if (mysqli_num_rows($result) > 0) {
-            $data = mysqli_fetch_assoc($result);
+            return mysqli_fetch_assoc($result);
     }
-    return $data;
+    else echo "Didn't find any results.\n";
 }
 
 function getAllScootersInfo($sortBy) { // consulter les informations associées à toutes les trottinettes.
@@ -156,7 +156,7 @@ function getAllScootersInfo($sortBy) { // consulter les informations associées 
                  FROM `SCOOTERS`
                  LEFT JOIN (SELECT `scooterID`,count(*) AS `totalComplaints`
                             FROM `COMPLAINTS`
-                            WHERE `state` = 'notTreated'
+                            WHERE `state` = 'notTreated' OR `state` = 'inProcess'
                             GROUP BY `scooterID`) computeComplains
                             USING (scooterID)
                  ORDER BY $sortBy DESC";
@@ -210,8 +210,12 @@ function reparationScooter($scooter_id, $userID, $mechanic_id, $date, $note_text
   $adding = "INSERT INTO `REPARATIONS` (scooterID, userID, mechanicID, complainTime, note)
              VALUES ($scooter_id, $userID, $mechanic_id, '$date', '$note_text')";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
+  else
+    echo "<script>
+            alert('Complaint successfully updated');
+          </script>";
 }
 
 function userTripsHistory($uid,$sortBy) { //consulter l'historique des déplacement effectués
@@ -239,27 +243,7 @@ function userTripsHistory($uid,$sortBy) { //consulter l'historique des déplacem
     return $items;
 }
 
-
-/*function organizeRecharge($sid, $uid) {
-
-        $sctr_init_req = "SELECT `batteryLevel`, `locationX`, `locationY`
-                          FROM `SCOOTER`
-                          WHERE `scooterID` = $sid";
-        $result = mysqli_query($GLOBALS['link'], $sctr_init_req);
-        if (mysqli_num_rows($result) > 0) {
-                $data = mysqli_fetch_assoc($result);
-        }
-        $init_chrg = $data['batteryLevel'];
-        $init_x = $data['locationX'];
-        $init_y = $data['locationY'];
-        $adding_rchrg = "INSERT INTO `RELOADS` (scooterID, userID, initialLoad, finalLoad, sourceX, sourceY, destinationX, destinationY, starttime, endtime)
-                         VALUES ($sid, $uid, $init_chrg, finalLoad, $init_x, $init_y, destinationX, destinationY, starttime, endtime)";
-        if (!(mysqli_query($GLOBALS['link'], $adding))) {
-            echo "Error : (could not insert new data !) : " . $adding . "<br>" . mysqli_error($GLOBALS['link']),"\n";
-        }
-}*/
-
-function addScooter($model, $x, $y) { // insérer/supprimer une (nouvelle) trottinette dans le système
+function addScooter($model, $x, $y) { // insérer une (nouvelle) trottinette dans le système
   $adding = "INSERT INTO `SCOOTERS` (modelNumber, locationX, locationY, lastLocationTime)
              VALUES ('$model', $x, $y,CURRENT_TIMESTAMP)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
@@ -267,7 +251,7 @@ function addScooter($model, $x, $y) { // insérer/supprimer une (nouvelle) trott
   }
 }
 
-function reloadScooter($sid,$uid) { // insérer/supprimer une (nouvelle) trottinette dans le système
+function reloadScooter($sid,$uid) {
   $adding = "INSERT INTO `RELOADS`(scooterID,userID)
              VALUES($sid,$uid)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
@@ -284,19 +268,19 @@ function bringBackScooter($sid,$uid,$x,$y) {
   }
 }
 
-function removeScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
+function removeScooter($sid) { //supprimer une (nouvelle) trottinette dans le système
   updateScooterStatus($sid, 'defective');
 }
 
-function repairScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
+function repairScooter($sid) {
   updateScooterStatus($sid, 'inRepair');
 }
 
-function fixScooter($sid) { //insérer/supprimer une (nouvelle) trottinette dans le système
+function fixScooter($sid) {
   updateScooterStatus($sid, 'available');
 }
 
-function reserveScooter($sid,$uid) { //insérer/supprimer une (nouvelle) trottinette dans le système
+function reserveScooter($sid,$uid) {
     $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
               VALUES ($sid, $uid, 3, 'reservation')";
     if (!(mysqli_query($GLOBALS['link'], $extra))) {
@@ -309,7 +293,7 @@ function updateScooterStatus($sid, $new_status) { //actualiser le statut de chaq
                     SET `availability` = '$new_status'
                     WHERE `scooterID` = $sid";
   if (!(mysqli_query($GLOBALS['link'], $update_status))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."') </script>";
   }
 }
 
@@ -318,53 +302,17 @@ function updateComplaintState($uid, $sid, $date, $new_state) { //gérer, traiter
                     SET `state` = '$new_state'
                     WHERE `scooterID` = $sid AND `userID` = $uid AND `date` = '$date'";
   if (!(mysqli_query($GLOBALS['link'], $update_state))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
+  else
+    echo "<script>
+            alert('Complaint successfully updated');
+          </script>";
+
 }
-
-/*function closeComplaint($uid, $sid, $date) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
-  updateComplaintState($uid, $sid, $date, 'treated');
-}
-
-
-function verifyingComplaint($uid, $sid, $date) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
-  updateComplaintState($uid, $sid, $date, 'inProcess');
-}
-
-
-
-
-
-function addNote($uid, $sid, $mid, $complain_date, $note_text) { //gérer, traiter et clôturer les plaintes (demandes d'intervention), écrire une éventuelle note technique.
-  $update_req = "UPDATE `REPARATIONS`
-                 SET `note` = '$note_text'
-                 WHERE `scooterID` = $sid AND `userID` = $uid AND `mechanicID` = $mid AND `complainTime` = $complain_date";
-  if (!(mysqli_query($GLOBALS['link'], $update_req))) {
-      echo "Error : (could not insert new data !) : " . $update_req . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
-  }
-}*/
-
 
 function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber){ //faire évoluer un utilisateur lambda en utilisateur avec droit de recharge des trottinettes.
-          /*$usrinfo_req = "SELECT `password`, `bankaccount`
-                          FROM `ALL_USERS`
-                          WHERE `ID` = $uid";
-          $result = mysqli_query($GLOBALS['link'], $usrinfo_req);
-          if (mysqli_num_rows($result) > 0) {
-                  $data = mysqli_fetch_assoc($result);
-                  $deleting = "DELETE FROM `ALL_USERS`
-                               WHERE `ID`=$uid";
-                  if (!(mysqli_query($GLOBALS['link'], $deleting))) {
-                      echo "Error : (could not delete data !) : " . $deleting . "<br>" . mysqli_error($GLOBALS['link']). "<br>";
-                  }
-                  //print_r($data['password']);
-                  $password = $data['password'];
-                  $bankaccount = $data['bankaccount'];
-                  addRegiteredUser($password, $bankaccount, $lastname, $firstname, $phone, $adrsCity, $adrsZip, $adrsStreet, $adrsNumber);
-          }
-          else {
-            echo "ERROR\n";
-          }*/
+
           $new_id = getRegisteredID();
           $update_user = "UPDATE `ALL_USERS`
                           SET `ID` = $new_id, `lastname` = '$lastname', `firstname` = '$firstname', `phone` = '$phone'
@@ -587,11 +535,4 @@ function getR5() {
   return $items;
 }
 
-
-
-/*
-$d = new DateTime('2017-01-01T19:40:36');
-addNote(574,1000274,78849393673150838933, $d, "ok");*/
-//crossOutScooter(600);
-//mysqli_close($link);
 ?>

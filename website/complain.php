@@ -45,7 +45,7 @@
 			complainScooter($ID,$_SESSION["ID"],$description);
 			echo "<script>
 							alert('Complaint successfully sent');
-							window.location = 'trottinette.php';
+							window.location = 'trottinette.php?ID=".$ID."';
 						</script>";
 		}
 	}
