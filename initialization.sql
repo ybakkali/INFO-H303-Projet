@@ -283,10 +283,8 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
     FOR EACH ROW
     BEGIN
 
-    set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = NEW.scooterID);
-    IF @var != "inReload" THEN
-        signal sqlstate '45000'  SET MESSAGE_TEXT = 'Not in reload';
-    ELSE
+    set @var = (SELECT availability FROM SCOOTERS WHERE `scooterID` = OLD.scooterID);
+    IF @var = "inReload" AND OLD.endtime IS NULL THEN
         UPDATE `SCOOTERS` S
         SET availability = "available"
         WHERE S.`scooterID` = NEW.scooterID;
@@ -299,6 +297,9 @@ CREATE TRIGGER RELOADS_TRIGGER BEFORE INSERT ON `RELOADS`
             INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
             VALUES (NEW.scooterID, NEW.userID, 20, "penalty");
         END IF;
+
+    ELSE
+        signal sqlstate '45000'  SET MESSAGE_TEXT = 'Not in reload';
     END IF;
     END |
 

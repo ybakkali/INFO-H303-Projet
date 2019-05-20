@@ -83,7 +83,7 @@ function addUnregiteredUser($password, $bankaccount) { //inscrire un nouvel util
     $adding = "INSERT INTO `ALL_USERS` (ID, password, bankaccount)
                VALUES ($ID, '$password', '$bankaccount')";
     if (!(mysqli_query($GLOBALS['link'], $adding))) {
-        echo mysqli_error($GLOBALS['link']). "<br>";
+        echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
         return false;
     }
     else {
@@ -202,7 +202,7 @@ function complainScooter($scooter_id, $user_id, $cmpln_text) { //introduire une 
   $adding = "INSERT INTO `COMPLAINTS` (scooterID, userID, description)
              VALUES ($scooter_id, $user_id, '$cmpln_text')";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
 }
 
@@ -247,7 +247,7 @@ function addScooter($model, $x, $y) { // insérer une (nouvelle) trottinette dan
   $adding = "INSERT INTO `SCOOTERS` (modelNumber, locationX, locationY, lastLocationTime)
              VALUES ('$model', $x, $y,CURRENT_TIMESTAMP)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
 }
 
@@ -255,16 +255,16 @@ function reloadScooter($sid,$uid) {
   $adding = "INSERT INTO `RELOADS`(scooterID,userID)
              VALUES($sid,$uid)";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
 }
 
 function bringBackScooter($sid,$uid,$x,$y) {
   $adding = "UPDATE`RELOADS`
              SET finalLoad = 4, destinationX = $x, destinationY = $y, endtime = CURRENT_TIMESTAMP
-             WHERE scooterID = $sid AND userID = $uid AND endtime IS NULL ";
+             WHERE scooterID = $sid AND userID = $uid";
   if (!(mysqli_query($GLOBALS['link'], $adding))) {
-      echo mysqli_error($GLOBALS['link']). "<br>";
+      echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
   }
 }
 
@@ -284,7 +284,7 @@ function reserveScooter($sid,$uid) {
     $extra = "INSERT INTO `EXTRA_PAYMENT` (scooterID,userID,price,type)
               VALUES ($sid, $uid, 3, 'reservation')";
     if (!(mysqli_query($GLOBALS['link'], $extra))) {
-        echo mysqli_error($GLOBALS['link']). "<br>";
+        echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
     }
 }
 
@@ -318,7 +318,7 @@ function convertToRegUser($uid, $lastname, $firstname, $phone, $adrsCity, $adrsZ
                           SET `ID` = $new_id, `lastname` = '$lastname', `firstname` = '$firstname', `phone` = '$phone'
                           WHERE `ID` = $uid";
           if (!(mysqli_query($GLOBALS['link'], $update_user))) {
-              echo mysqli_error($GLOBALS['link']). "<br>";
+              echo "<script> alert('".mysqli_error($GLOBALS['link'])."')</script>";
               return false;
           }
           $adding_adrs = "INSERT INTO `USER_ADDRESS` (ID, city, cp, street, number)
